@@ -198,6 +198,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cursor: {fileID: 1383244271}
+  mapManager: {fileID: 1673261858}
+  pathPrefab: {fileID: 1456287426249902576, guid: 6d4563acc1e317144a575ac0e8c3b083, type: 3}
 --- !u!4 &334276030
 Transform:
   m_ObjectHideFlags: 0

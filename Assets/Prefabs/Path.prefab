@@ -10,10 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 400510777208146903}
   - component: {fileID: 3933691648832743773}
-  - component: {fileID: 8815677207081407640}
-  - component: {fileID: 7581943063636213161}
   m_Layer: 0
-  m_Name: SelectorTile
+  m_Name: Path
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -86,48 +84,3 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!60 &8815677207081407640
-PolygonCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1456287426249902576}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 0.5}
-    newSize: {x: 1, y: 0.5}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Points:
-    m_Paths:
-    - - {x: -0.031162053, y: 0.24713376}
-      - {x: -0.4961899, y: 0.01249449}
-      - {x: -0.5021991, y: -0.0103022605}
-      - {x: -0.022789806, y: -0.24699539}
-      - {x: 0.02821672, y: -0.24560185}
-      - {x: 0.49710935, y: -0.0102547705}
-      - {x: 0.50500524, y: 0.009635881}
-      - {x: 0.031505227, y: 0.24585137}
---- !u!114 &7581943063636213161
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1456287426249902576}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d862afcb011947e46a7f978f55ff9c27, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

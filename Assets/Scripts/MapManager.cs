@@ -16,6 +16,8 @@ namespace finished1
 
         // Map tiles dictionary
         public Dictionary<Vector2Int, GameObject> map;
+        public Vector2Int? selection = null;
+
         public bool ignoreBottomTiles;
 
         private void Awake() {
@@ -48,6 +50,7 @@ namespace finished1
                             var cellWorldPosition = tileMap.GetCellCenterWorld(tileLocation);
                             selectorTile.transform.position = new Vector3(cellWorldPosition.x, cellWorldPosition.y, cellWorldPosition.z+1);
                             selectorTile.GetComponent<SpriteRenderer>().sortingOrder = tileMap.GetComponent<TilemapRenderer>().sortingOrder;
+                            selectorTile.GetComponent<SelectorTile>().InitializeLocation(tileLocation);
                             map.Add(tileKey, selectorTile);
                         }
                     }
