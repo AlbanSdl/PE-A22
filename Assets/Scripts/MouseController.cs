@@ -9,9 +9,13 @@ public class MouseController : MonoBehaviour {
     public GameObject mapManager;
     public GameObject pathPrefab;
 
+
     void Start()
     {
 
+    }
+
+    void Update() {
     }
 
     void LateUpdate() {
