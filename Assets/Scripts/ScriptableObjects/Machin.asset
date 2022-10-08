@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Machin
   m_EditorClassIdentifier: 
   CharacterName: Machin
-  Sprite: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}
+  Sprite: {fileID: 21300000, guid: ae59a8070c07ca14b9760a75e78635c1, type: 3}
   Initiative: 20
   Health: 3
   Armor: 4
