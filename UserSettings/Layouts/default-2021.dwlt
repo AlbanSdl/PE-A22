@@ -674,6 +674,7 @@ MonoBehaviour:
     m_Target: {x: 1.3212394, y: -0.311274, z: -10.476551}
     speed: 2
     m_Value: {x: 1.3212394, y: -0.311274, z: -10.476551}
+    m_Value: {x: 1.5164192, y: -0.32160705, z: -10.47484}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -884,13 +885,13 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Scripts
+    - Assets/Characters
     m_Globs: []
     m_OriginalText: 
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/Scripts
+  - Assets/Characters
   m_LastFoldersGridSize: -1
   m_LastProjectPath: C:\Users\anouc\Documents\CODING\UNITY\PE-A22
   m_LockTracker:
