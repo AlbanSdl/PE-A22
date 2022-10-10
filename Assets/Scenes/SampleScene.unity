@@ -330,6 +330,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db02f84c3e2e82d41a0732c589f4883a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mapManager: {fileID: 1673261858}
   AllyPrefabA: {fileID: 1132168131257448624, guid: 30d808e26a011e04293c46c03b03254c, type: 3}
   AllyPrefabB: {fileID: 2917854956981804190, guid: 2667b2fa65c1e84429d14daa90576fb0, type: 3}
   N: 3

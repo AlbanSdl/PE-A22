@@ -5,7 +5,7 @@ public class PathfindingMap {
     private Dictionary<Vector2Int, PathfindingNode> Nodes;
     private Vector2Int StartingNodeLocation;
 
-    public PathfindingMap(finished1.MapManager MapManager, Vector2Int from, Vector2Int to) {
+    public PathfindingMap(MapManager MapManager, Vector2Int from, Vector2Int to) {
         Nodes = new Dictionary<Vector2Int, PathfindingNode>();
         StartingNodeLocation = from;
         foreach (var tile in MapManager.map) {
