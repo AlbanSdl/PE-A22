@@ -9,7 +9,6 @@ public class MouseController : MonoBehaviour {
     public GameObject mapManager;
 
 
-
     void Start()
     {
 

@@ -1,20 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-<<<<<<< HEAD
-
-public class AllyControl : MonoBehaviour
-{
-
-    public AlliesData AllyData;
-
-    public Sprite sprite;
-    public new string name;
-    public int health;
-    public int initiative;
-    public int attack;
-    public int armor;
-=======
 using UnityEngine.Tilemaps;
 
 sealed public class AllyControl : AbstractMovement
@@ -27,7 +13,6 @@ sealed public class AllyControl : AbstractMovement
 
     public Sprite sprite;
     public int health;
->>>>>>> main
     public void Start()
     {
         if (AllyData != null) {
@@ -35,21 +20,6 @@ sealed public class AllyControl : AbstractMovement
         }
     }
 
-<<<<<<< HEAD
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    public void LoadData (AlliesData data) {
-        sprite = data.Sprite;
-        health = data.Health;
-        initiative = data.Initiative;
-        attack = data.Attack;
-        armor = data.Armor;
-        name = data.CharacterName;
-=======
     public void LoadData (AlliesData data) {
         sprite = data.Sprite;
     }
@@ -123,6 +93,5 @@ sealed public class AllyControl : AbstractMovement
     private void OnMouseOver() {
         if(Input.GetMouseButtonDown(0))
             this.Select();
->>>>>>> main
     }
 }
