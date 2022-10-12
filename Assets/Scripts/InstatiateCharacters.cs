@@ -6,6 +6,7 @@ using UnityEngine;
 public class InstatiateCharacters : MonoBehaviour
 {
     AllyControl AllyData;
+    public GameObject mapManager;
     public GameObject AllyPrefabA;
     public GameObject AllyPrefabB;
     public int N;
@@ -27,14 +28,18 @@ public class InstatiateCharacters : MonoBehaviour
     public void SpawnA() {
         AlliesList.Add(Instantiate(AllyPrefabA));
         index = AlliesList.Count-1;
-        AlliesList[index].GetComponent<AllyControl>().Start();
+        AllyControl ally = AlliesList[index].GetComponent<AllyControl>();
+        ally.Start();
+        ally.mapManager = this.mapManager;
         AlliesList[index].GetComponent<SpriteRenderer>().sprite = AlliesList[index].GetComponent<AllyControl>().sprite;
     }
 
     public void SpawnB() {
         AlliesList.Add(Instantiate(AllyPrefabB));
         index = AlliesList.Count-1;
-        AlliesList[index].GetComponent<AllyControl>().Start();
+        AllyControl ally = AlliesList[index].GetComponent<AllyControl>();
+        ally.Start();
+        ally.mapManager = this.mapManager;
         AlliesList[index].GetComponent<SpriteRenderer>().sprite = AlliesList[index].GetComponent<AllyControl>().sprite;
     }
 }

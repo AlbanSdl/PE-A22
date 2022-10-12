@@ -8,9 +8,16 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
+<<<<<<< HEAD
   - component: {fileID: 3237834983013976488}
   - component: {fileID: 923973464120743781}
   - component: {fileID: 3108150998877901136}
+=======
+  - component: {fileID: 2608417632684296046}
+  - component: {fileID: 923973464120743781}
+  - component: {fileID: 3108150998877901136}
+  - component: {fileID: -9138495909222560244}
+>>>>>>> main
   m_Layer: 0
   m_Name: AllyPrefab
   m_TagString: Untagged
@@ -18,21 +25,38 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+<<<<<<< HEAD
 --- !u!4 &3237834983013976488
 Transform:
+=======
+--- !u!224 &2608417632684296046
+RectTransform:
+>>>>>>> main
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4176774925837815825}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+<<<<<<< HEAD
   m_LocalPosition: {x: 0.64855856, y: -0.7003289, z: -0.13188256}
+=======
+  m_LocalPosition: {x: 0, y: 0, z: -0.13188256}
+>>>>>>> main
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+<<<<<<< HEAD
+=======
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0.5, y: -0.5}
+  m_SizeDelta: {x: 1, y: 1}
+  m_Pivot: {x: 0.5, y: 0.5}
+>>>>>>> main
 --- !u!212 &923973464120743781
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -98,5 +122,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AllyData: {fileID: 0}
+<<<<<<< HEAD
   sprite: {fileID: 0}
   health: 0
+=======
+  mapManager: {fileID: 0}
+  pathPrefab: {fileID: 1456287426249902576, guid: 6d4563acc1e317144a575ac0e8c3b083, type: 3}
+  sprite: {fileID: 0}
+  health: 0
+--- !u!136 &-9138495909222560244
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4176774925837815825}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.5
+  m_Height: 1
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
+>>>>>>> main
