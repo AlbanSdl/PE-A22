@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: -9138495909222560244}
   m_Layer: 0
   m_Name: AllyPrefab
-  m_TagString: Untagged
+  m_TagString: Character
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -108,6 +108,10 @@ MonoBehaviour:
   pathPrefab: {fileID: 1456287426249902576, guid: 6d4563acc1e317144a575ac0e8c3b083, type: 3}
   sprite: {fileID: 0}
   health: 0
+  name: 
+  initiative: 0
+  armor: 0
+  attack: 0
 --- !u!136 &-9138495909222560244
 CapsuleCollider:
   m_ObjectHideFlags: 0

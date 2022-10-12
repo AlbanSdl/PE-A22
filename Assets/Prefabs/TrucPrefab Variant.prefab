@@ -247,5 +247,56 @@ PrefabInstance:
       propertyPath: m_Name
       value: TrucPrefab Variant
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: -9138495909222560244, guid: 7a5f03022b1cc1d4696de5bb5b27fe88, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 7a5f03022b1cc1d4696de5bb5b27fe88, type: 3}
+--- !u!1 &2917854956981804190 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4176774925837815825, guid: 7a5f03022b1cc1d4696de5bb5b27fe88, type: 3}
+  m_PrefabInstance: {fileID: 1263452341274741903}
+  m_PrefabAsset: {fileID: 0}
+--- !u!60 &-7218767027833542562
+PolygonCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2917854956981804190}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1, y: 1.21875}
+    newSize: {x: 1, y: 1.21875}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Points:
+    m_Paths:
+    - - {x: 0, y: -0.21469504}
+      - {x: -0.46797898, y: -0.4856107}
+      - {x: 0.0038097799, y: -0.76000917}
+      - {x: 0.45126343, y: -0.47996402}
+--- !u!70 &-7172398470234026848
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2917854956981804190}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.014415711, y: -0.01585728}
+  m_Size: {x: 0.5288314, y: 1.2566}
+  m_Direction: 0

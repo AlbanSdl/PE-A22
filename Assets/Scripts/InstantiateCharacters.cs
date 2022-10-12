@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 
-public class InstatiateCharacters : MonoBehaviour
+public class InstantiateCharacters : MonoBehaviour
 {
     AllyControl AllyData;
     public GameObject mapManager;
@@ -12,14 +13,17 @@ public class InstatiateCharacters : MonoBehaviour
     public int N;
     public List<GameObject> AlliesList;
     private int index;
+    GameObject[] allPortraits;
 
-    // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
-
+        allPortraits = GameObject.FindGameObjectsWithTag("Portrait");
+        foreach (GameObject portrait in allPortraits) {
+            Debug.Log(portrait);
+            portrait.SetActive(false);
+        }
     }
 
-    // Update is called once per frame
     void Update()
     {
         
@@ -29,17 +33,28 @@ public class InstatiateCharacters : MonoBehaviour
         AlliesList.Add(Instantiate(AllyPrefabA));
         index = AlliesList.Count-1;
         AllyControl ally = AlliesList[index].GetComponent<AllyControl>();
-        ally.Start();
+        ally.Awake();
         ally.mapManager = this.mapManager;
         AlliesList[index].GetComponent<SpriteRenderer>().sprite = AlliesList[index].GetComponent<AllyControl>().sprite;
+        ShowPortrait(index);
     }
 
     public void SpawnB() {
         AlliesList.Add(Instantiate(AllyPrefabB));
         index = AlliesList.Count-1;
         AllyControl ally = AlliesList[index].GetComponent<AllyControl>();
-        ally.Start();
+        ally.Awake();
         ally.mapManager = this.mapManager;
         AlliesList[index].GetComponent<SpriteRenderer>().sprite = AlliesList[index].GetComponent<AllyControl>().sprite;
+        ShowPortrait(index);
+    }
+
+    public void ShowPortrait(int ind) {
+    foreach (GameObject portrait in allPortraits) {
+            if (AlliesList[ind].GetComponent<SpriteRenderer>().sprite == portrait.GetComponent<Image>().sprite) {
+                portrait.SetActive(true);
+                break;
+            }
+        }
     }
 }

@@ -5,7 +5,6 @@ using UnityEngine.Tilemaps;
 
 sealed public class AllyControl : AbstractMovement
 {
-
     public AlliesData AllyData;
     public GameObject mapManager;
     
@@ -13,7 +12,11 @@ sealed public class AllyControl : AbstractMovement
 
     public Sprite sprite;
     public int health;
-    public void Start()
+    public new string name;
+    public int initiative;
+    public int armor;
+    public int attack;
+    public void Awake()
     {
         if (AllyData != null) {
             LoadData(AllyData);
@@ -22,6 +25,10 @@ sealed public class AllyControl : AbstractMovement
 
     public void LoadData (AlliesData data) {
         sprite = data.Sprite;
+        name = data.CharacterName;
+        initiative = data.Initiative;
+        armor = data.Armor;
+        attack = data.Attack;
     }
 
     public SelectorTile GetCurrentTile() {
