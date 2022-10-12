@@ -7,8 +7,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-<<<<<<< HEAD
-=======
     - target: {fileID: -9138495909222560244, guid: 7a5f03022b1cc1d4696de5bb5b27fe88, type: 3}
       propertyPath: m_Height
       value: 1.1792842
@@ -197,7 +195,6 @@ PrefabInstance:
       propertyPath: m_WasSpriteAssigned
       value: 0
       objectReference: {fileID: 0}
->>>>>>> main
     - target: {fileID: 3108150998877901136, guid: 7a5f03022b1cc1d4696de5bb5b27fe88, type: 3}
       propertyPath: AllyData
       value: 
@@ -248,11 +245,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4176774925837815825, guid: 7a5f03022b1cc1d4696de5bb5b27fe88, type: 3}
       propertyPath: m_Name
-<<<<<<< HEAD
-      value: TrucPrefab
-=======
       value: TrucPrefab Variant
->>>>>>> main
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7a5f03022b1cc1d4696de5bb5b27fe88, type: 3}
