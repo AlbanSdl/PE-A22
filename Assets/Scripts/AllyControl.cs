@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -35,13 +33,13 @@ sealed public class AllyControl : AbstractMovement
         return this.GetTileAtReal(this.GetPosition());
     }
 
-    private SelectorTile GetTileAtReal(Vector2 position) {
+    private SelectorTile GetTileAtReal(Vector3 position) {
         Vector3Int cellPosition = mapManager.GetComponent<Tilemap>().WorldToCell(position);
         return GetTileAt(new Vector2Int(cellPosition.x, cellPosition.y));
     }
 
     private SelectorTile GetTileAt(Vector2Int position) {
-        return mapManager.GetComponent<MapManager>().map[new Vector2Int(position.x, position.y)].GetComponent<SelectorTile>();
+        return mapManager.GetComponent<MapManager>().map[position].GetComponent<SelectorTile>();
     }
 
     // Debug method
@@ -55,8 +53,8 @@ sealed public class AllyControl : AbstractMovement
         return new Vector2Int(currentLocation.x, currentLocation.y);
     }
 
-    protected override Vector2 GetPosition() {
-        return new Vector2(transform.position.x, transform.position.y - ((RectTransform) transform).rect.height / 2);
+    protected override Vector3 GetPosition() {
+        return new Vector3(transform.position.x, transform.position.y - ((RectTransform) transform).rect.height / 2, transform.position.z);
     }
 
     private Vector3 ComputePosition(Vector2Int position) {

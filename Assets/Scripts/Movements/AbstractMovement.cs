@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.Tilemaps;
 using System;
 using System.Linq;
 using System.Collections.Generic;
@@ -10,7 +9,7 @@ public abstract class AbstractMovement : MonoBehaviour {
 
     protected abstract Vector2Int GetTilePosition();
 
-    protected abstract Vector2 GetPosition();
+    protected abstract Vector3 GetPosition();
 
     protected abstract void SetTilePosition(Vector2Int position);
 
