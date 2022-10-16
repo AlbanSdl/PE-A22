@@ -75,7 +75,6 @@ sealed public class AllyControl : AbstractMovement
 
     public void Select() {
         this.GetMapManager().selection = this;
-        this.GetMapManager().isSelectionFrame = true;
     }
 
     protected override MapManager GetMapManager() {
@@ -89,6 +88,7 @@ sealed public class AllyControl : AbstractMovement
     }
 
     public override bool Move(Vector2Int to) {
+        if (to == this.GetTilePosition()) return false;
         if (base.Move(to)) {
             this.HighlightCurrentTile();
             // Detect whether a battle will start after movement
@@ -113,6 +113,8 @@ sealed public class AllyControl : AbstractMovement
             Debug.Log("Battle should start");
             this.waitingForBattle = null;
         }
+        // End ally turn
+        this.GetMapManager().battleManager.GetComponent<BattleManager>().NextTurnStep();
     }
 
     // private void OnMouseOver() {

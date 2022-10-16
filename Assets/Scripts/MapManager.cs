@@ -8,14 +8,12 @@ public class MapManager : MonoBehaviour
 {
     public GameObject selectorPrefab;
     public GameObject selectorContainer;
+    public GameObject battleManager;
 
     // Map tiles dictionary
     public Dictionary<Vector2Int, GameObject> map;
     #nullable enable
     public AbstractMovement? selection = null;
-
-    [Obsolete("Cette variable donne quelque chose d'assez moche niveau code. Il faudrait ne plus l'utiliser")]
-    public bool isSelectionFrame = false;
 
     public bool ignoreBottomTiles;
 

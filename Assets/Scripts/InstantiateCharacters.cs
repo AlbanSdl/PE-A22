@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,7 +12,8 @@ public class InstantiateCharacters : MonoBehaviour
     public int N;
     public List<GameObject> AlliesList;
     private int index;
-    GameObject[] allPortraits;
+    internal GameObject[] allPortraits;
+    public GameObject BattleManager;
 
     void Awake()
     {
@@ -30,25 +30,33 @@ public class InstantiateCharacters : MonoBehaviour
     }
 
     public void SpawnA() {
+        if (AlliesList.Find((obj) => obj.GetComponent<AllyControl>().sprite == AllyPrefabA.GetComponent<AllyControl>().AllyData.Sprite)) {
+            Debug.LogWarning("Character already summonned");
+            return;
+        }
         AlliesList.Add(Instantiate(AllyPrefabA));
         index = AlliesList.Count-1;
         AllyControl ally = AlliesList[index].GetComponent<AllyControl>();
         ally.Awake();
         ally.mapManager = this.mapManager;
         AlliesList[index].GetComponent<SpriteRenderer>().sprite = AlliesList[index].GetComponent<AllyControl>().sprite;
-        ally.Select();
         ShowPortrait(index);
+        BattleManager.GetComponent<BattleManager>().UpdateTurnOrder();
     }
 
     public void SpawnB() {
+        if (AlliesList.Find((obj) => obj.GetComponent<AllyControl>().sprite == AllyPrefabB.GetComponent<AllyControl>().AllyData.Sprite)) {
+            Debug.LogWarning("Character already summonned");
+            return;
+        }
         AlliesList.Add(Instantiate(AllyPrefabB));
         index = AlliesList.Count-1;
         AllyControl ally = AlliesList[index].GetComponent<AllyControl>();
         ally.Awake();
         ally.mapManager = this.mapManager;
         AlliesList[index].GetComponent<SpriteRenderer>().sprite = AlliesList[index].GetComponent<AllyControl>().sprite;
-        ally.Select();
         ShowPortrait(index);
+        BattleManager.GetComponent<BattleManager>().UpdateTurnOrder();
     }
 
     public void ShowPortrait(int ind) {

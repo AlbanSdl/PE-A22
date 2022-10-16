@@ -8,11 +8,6 @@ public class MouseController : MonoBehaviour {
     void LateUpdate() {
         MapManager mapManagerScript = mapManager.GetComponent<MapManager>();
 
-        if (mapManagerScript.isSelectionFrame) {
-            mapManagerScript.isSelectionFrame = false;
-            return;
-        }
-
         // Select the right tile when the mouse hovers by raycasting
         RaycastHit2D? hit = GetFocusedOnTile();
 

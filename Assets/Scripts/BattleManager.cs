@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,32 +9,38 @@ public class BattleManager : MonoBehaviour
     public List<GameObject> allCharacters;
     GameObject[] allPortraits;
 
+    private int turnIndex = 0;
+
 
     void Awake() {
         instances = gameManager.GetComponent<InstantiateCharacters>();
-        allPortraits = GameObject.FindGameObjectsWithTag("Portrait");
     }
 
-    void Start()
-    {
+    void Start() {
         allCharacters = instances.AlliesList;
-
+        allPortraits = instances.allPortraits;
     }
 
-    void Update()
-    {
-        
+    public void NextTurnStep() {
+        turnIndex = (turnIndex + 1) % allCharacters.Count;
+        UpdateTurnOrder();
     }
 
-    void TurnOrder() {
-            allCharacters.Sort((GameObject x, GameObject y) => x.GetComponent<AllyControl>().initiative.CompareTo(y.GetComponent<AllyControl>().initiative));
-            for (int i = 0; i < allCharacters.Count; i++) {
-                GameObject portrait = GetPortrait(i);
-                if (portrait != null) {
-                    portrait.GetComponent<RectTransform>().position = new Vector3(portrait.GetComponent<RectTransform>().position.x-100*i, portrait.GetComponent<RectTransform>().position.y, portrait.GetComponent<RectTransform>().position.z);
-                }
+    public void UpdateTurnOrder() {
+        allCharacters.Sort((GameObject x, GameObject y) => x.GetComponent<AllyControl>().initiative.CompareTo(y.GetComponent<AllyControl>().initiative));
+        allCharacters[turnIndex].GetComponent<AllyControl>().Select();
+        for (int i = 0; i < allCharacters.Count; i++) {
+            GameObject portrait = GetPortrait(i);
+            portrait.SetActive(i >= turnIndex);
+            if (portrait != null) {
+                portrait.GetComponent<RectTransform>().localPosition = new Vector3(
+                    (i - turnIndex) * 100,
+                    portrait.GetComponent<RectTransform>().localPosition.y,
+                    portrait.GetComponent<RectTransform>().localPosition.z
+                );
             }
         }
+    }
 
     public GameObject GetPortrait(int ind) {
         foreach (GameObject portrait in allPortraits) {

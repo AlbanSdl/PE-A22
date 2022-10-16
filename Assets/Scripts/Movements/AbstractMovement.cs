@@ -54,6 +54,11 @@ public abstract class AbstractMovement : MonoBehaviour {
             // Animate here
             float animationPercentage = Math.Min(1, (Time.time - lastAnimationTime ?? 0) / MOVEMENT_ANIMATION_DURATION);
             this.SetTileAnimationPosition(this.currentAnimatedPath[0], this.currentAnimatedPath[1], animationPercentage);
+        } else if (currentAnimatedPath.Count == 1) {
+            Vector2Int origin = this.currentAnimatedPath[0];
+            this.currentAnimatedPath.RemoveAt(0);
+            this.NotifyTileAnimationEnd(origin);
+            this.OnMovementFinished();
         }
     }
 
@@ -61,13 +66,6 @@ public abstract class AbstractMovement : MonoBehaviour {
         Vector2Int destination = this.currentAnimatedPath[this.currentAnimatedPath.Count - 1];
         this.currentAnimatedPath.RemoveAt(this.currentAnimatedPath.Count - 1);
         this.NotifyTileAnimationEnd(destination);
-
-        if (this.currentAnimatedPath.Count == 1) {
-            Vector2Int origin = this.currentAnimatedPath[0];
-            this.currentAnimatedPath.RemoveAt(0);
-            this.NotifyTileAnimationEnd(origin);
-            this.OnMovementFinished();
-        }
     }
 
     protected virtual void DebugPath(Vector2Int position) {
