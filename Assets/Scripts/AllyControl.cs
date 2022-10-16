@@ -14,6 +14,9 @@ sealed public class AllyControl : AbstractMovement
     public int initiative;
     public int armor;
     public int attack;
+
+    private AllyControl waitingForBattle;
+
     public void Awake()
     {
         if (AllyData != null) {
@@ -88,6 +91,12 @@ sealed public class AllyControl : AbstractMovement
     public override void Move(Vector2Int to) {
         this.HighlightCurrentTile();
         base.Move(to);
+        // Detect whether a will start after movement
+        AllyControl other = GetTileAt(to).GetAllyOnTile();
+        if (other != null) {
+            this.waitingForBattle = other;
+            this.popDestination();
+        }
     }
 
     protected override void NotifyTileAnimationEnd(Vector2Int position) {
@@ -95,8 +104,16 @@ sealed public class AllyControl : AbstractMovement
         tile.GetComponent<SpriteRenderer>().color = new Color(0, 0, 0, 0);
     }
 
-    private void OnMouseOver() {
-        if(Input.GetMouseButtonDown(0))
-            this.Select();
+    protected override void OnMovementFinished() {
+        if (this.waitingForBattle != null) {
+            // Start battle here. Retrieve Enemy in `this.waitingForBattle`
+            Debug.Log("Battle should start");
+            this.waitingForBattle = null;
+        }
     }
+
+    // private void OnMouseOver() {
+    //     if(Input.GetMouseButtonDown(0))
+    //         this.Select();
+    // }
 }

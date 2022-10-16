@@ -56,6 +56,19 @@ public abstract class AbstractMovement : MonoBehaviour {
         }
     }
 
+    protected void popDestination() {
+        Vector2Int destination = this.currentAnimatedPath[this.currentAnimatedPath.Count - 1];
+        this.currentAnimatedPath.RemoveAt(this.currentAnimatedPath.Count - 1);
+        this.NotifyTileAnimationEnd(destination);
+
+        if (this.currentAnimatedPath.Count == 1) {
+            Vector2Int origin = this.currentAnimatedPath[0];
+            this.currentAnimatedPath.RemoveAt(0);
+            this.NotifyTileAnimationEnd(origin);
+            this.OnMovementFinished();
+        }
+    }
+
     protected virtual void DebugPath(Vector2Int position) {
         // Override this method to add behaviour
     }

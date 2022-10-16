@@ -1,21 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 using System.Linq;
 
 public class MouseController : MonoBehaviour {
     public GameObject cursor;
     public GameObject mapManager;
-
-
-    void Start()
-    {
-
-    }
-
-    void Update() {
-    }
 
     void LateUpdate() {
         MapManager mapManagerScript = mapManager.GetComponent<MapManager>();

@@ -5,11 +5,6 @@ public class SelectorTile : MonoBehaviour
 {
     public Vector3Int Location { get; private set; }
 
-    void Update()
-    {
-        
-    }
-
     public bool ShowTile() {
         if (Location.z < 0) return false;
         GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 1);
@@ -28,8 +23,18 @@ public class SelectorTile : MonoBehaviour
         Location = new Vector3Int(location.x, location.y, location.z);
     }
 
-    public bool CanAccessTo(SelectorTile OtherTile) {
-        return OtherTile.Location.z >= 0 && Math.Abs(OtherTile.Location.z - Location.z) < 2;
+    public bool CanAccessTo(SelectorTile OtherTile, bool ignoreCharacters = false) {
+        return OtherTile.Location.z >= 0 && Math.Abs(OtherTile.Location.z - Location.z) < 2 && (ignoreCharacters || OtherTile.GetAllyOnTile() == null);
+    }
+
+    #nullable enable
+    public AllyControl? GetAllyOnTile() {
+        GameObject[] characters = GameObject.FindGameObjectsWithTag("Character");
+        foreach (var character in characters) {
+            AllyControl ally = character.GetComponent<AllyControl>();
+            if (ally.GetCurrentTile() == this) return ally;
+        }
+        return null;
     }
 
 }

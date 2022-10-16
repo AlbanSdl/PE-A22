@@ -36,6 +36,7 @@ public class InstantiateCharacters : MonoBehaviour
         ally.Awake();
         ally.mapManager = this.mapManager;
         AlliesList[index].GetComponent<SpriteRenderer>().sprite = AlliesList[index].GetComponent<AllyControl>().sprite;
+        ally.Select();
         ShowPortrait(index);
     }
 
@@ -46,6 +47,7 @@ public class InstantiateCharacters : MonoBehaviour
         ally.Awake();
         ally.mapManager = this.mapManager;
         AlliesList[index].GetComponent<SpriteRenderer>().sprite = AlliesList[index].GetComponent<AllyControl>().sprite;
+        ally.Select();
         ShowPortrait(index);
     }
 
