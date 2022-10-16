@@ -25,8 +25,8 @@ public class MouseController : MonoBehaviour {
             if (Input.GetMouseButtonDown(0)) {
                 if (mapManagerScript.selection != null) {
                     // execute movement for `mapManagerScript.selection` to reach `selectorTile.Location`
-                    mapManagerScript.selection.Move(new Vector2Int(selectorTile.Location.x, selectorTile.Location.y));
-                    mapManagerScript.selection = null;
+                    if (mapManagerScript.selection.Move(new Vector2Int(selectorTile.Location.x, selectorTile.Location.y)))
+                        mapManagerScript.selection = null;
                 }
             }
         }

@@ -20,17 +20,18 @@ public abstract class AbstractMovement : MonoBehaviour {
     private List<Vector2Int> currentAnimatedPath = new List<Vector2Int>();
     private float? lastAnimationTime = null;
 
-    public virtual void Move(Vector2Int to) {
+    public virtual bool Move(Vector2Int to) {
         MapManager manager = this.GetMapManager();
         var path = new PathfindingMap(manager, this.GetTilePosition(), to).ComputePath();
         if (path == null) {
             Debug.LogWarning("Il n'y a pas de chemin vers la case sélectionnée");
-            return;
+            return false;
         }
         foreach (var pathPart in path) this.DebugPath(pathPart);
         path.Reverse();
         this.currentAnimatedPath.Add(this.GetTilePosition());
         this.currentAnimatedPath.AddRange(path);
+        return true;
     }
 
     protected void Update() {
@@ -56,7 +57,7 @@ public abstract class AbstractMovement : MonoBehaviour {
         }
     }
 
-    protected void popDestination() {
+    protected void PopDestination() {
         Vector2Int destination = this.currentAnimatedPath[this.currentAnimatedPath.Count - 1];
         this.currentAnimatedPath.RemoveAt(this.currentAnimatedPath.Count - 1);
         this.NotifyTileAnimationEnd(destination);

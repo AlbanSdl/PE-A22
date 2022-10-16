@@ -88,15 +88,18 @@ sealed public class AllyControl : AbstractMovement
         tile.GetComponent<SpriteRenderer>().color = new Color(1, 1, 0, 1);
     }
 
-    public override void Move(Vector2Int to) {
-        this.HighlightCurrentTile();
-        base.Move(to);
-        // Detect whether a will start after movement
-        AllyControl other = GetTileAt(to).GetAllyOnTile();
-        if (other != null) {
-            this.waitingForBattle = other;
-            this.popDestination();
+    public override bool Move(Vector2Int to) {
+        if (base.Move(to)) {
+            this.HighlightCurrentTile();
+            // Detect whether a battle will start after movement
+            AllyControl other = GetTileAt(to).GetAllyOnTile();
+            if (other != null) {
+                this.waitingForBattle = other;
+                this.PopDestination();
+            }
+            return true;
         }
+        return false;
     }
 
     protected override void NotifyTileAnimationEnd(Vector2Int position) {
