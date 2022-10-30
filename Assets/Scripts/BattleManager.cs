@@ -7,6 +7,7 @@ public class BattleManager : MonoBehaviour
     public GameObject gameManager;
     InstantiateCharacters instances;
     public List<GameObject> allCharacters;
+    public List<GameObject> deadTemp;
     GameObject[] allPortraits;
 
     private int turnIndex = 0;
@@ -22,12 +23,21 @@ public class BattleManager : MonoBehaviour
     }
 
     public void NextTurnStep() {
+        deadTemp = allCharacters.FindAll(c => c.GetComponent<AllyControl>().health <= 0);
+        foreach (GameObject c in deadTemp) {
+            Destroy(c);
+            int itemp = allCharacters.IndexOf(c);
+            GameObject portrait = GetPortrait(itemp);
+            portrait.SetActive(false);
+            allCharacters.Remove(c);
+        }
         turnIndex = (turnIndex + 1) % allCharacters.Count;
         UpdateTurnOrder();
     }
 
     public void UpdateTurnOrder() {
         allCharacters.Sort((GameObject x, GameObject y) => x.GetComponent<AllyControl>().initiative.CompareTo(y.GetComponent<AllyControl>().initiative));
+        // allCharacters = allCharacters.FindAll(c => c.GetComponent<AllyControl>().health > 0);
         allCharacters[turnIndex].GetComponent<AllyControl>().Select();
         for (int i = 0; i < allCharacters.Count; i++) {
             GameObject portrait = GetPortrait(i);

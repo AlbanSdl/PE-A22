@@ -4,6 +4,8 @@ using UnityEngine.Tilemaps;
 sealed public class AllyControl : AbstractMovement
 {
     public AlliesData AllyData;
+    public InstantiateCharacters instances;
+    public GameObject gameManager;
     public GameObject mapManager;
     
     public GameObject pathPrefab;
@@ -22,15 +24,18 @@ sealed public class AllyControl : AbstractMovement
         if (AllyData != null) {
             LoadData(AllyData);
         }
+        //instances = gameManager.GetComponent<InstantiateCharacters>();
     }
 
     public void LoadData (AlliesData data) {
+        health = data.Health;
         sprite = data.Sprite;
         name = data.CharacterName;
         initiative = data.Initiative;
         armor = data.Armor;
         attack = data.Attack;
     }
+
 
     public SelectorTile GetCurrentTile() {
         return this.GetTileAtReal(this.GetPosition());
@@ -110,15 +115,16 @@ sealed public class AllyControl : AbstractMovement
     protected override void OnMovementFinished() {
         if (this.waitingForBattle != null) {
             // Start battle here. Retrieve Enemy in `this.waitingForBattle`
-            Debug.Log("Battle should start");
+            int attackerDamage = attack - this.waitingForBattle.armor;
+            int defenderDamage = Mathf.RoundToInt(this.waitingForBattle.attack - armor * 0.5f);
+            this.waitingForBattle.health -= attack;
+            health -= defenderDamage;
+            Debug.Log(this.waitingForBattle.name + " lost " + attackerDamage + " HP !");
+            Debug.Log(name + " inflicted " + defenderDamage +" damage in return !");
             this.waitingForBattle = null;
         }
         // End ally turn
         this.GetMapManager().battleManager.GetComponent<BattleManager>().NextTurnStep();
     }
 
-    // private void OnMouseOver() {
-    //     if(Input.GetMouseButtonDown(0))
-    //         this.Select();
-    // }
 }

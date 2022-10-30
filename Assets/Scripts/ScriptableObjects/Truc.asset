@@ -12,10 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2f01afba98a4884a8256b2819b479f6, type: 3}
   m_Name: Truc
   m_EditorClassIdentifier: 
-  CharacterName: Truc
+  CharacterName: Archer
   Sprite: {fileID: 21300000, guid: 8c187954c277a44409fcecfa53e2e5ac, type: 3}
   Initiative: 10
-  Health: 50
-  Armor: 5
-  Attack: 5
-  Color: {r: 0, g: 1, b: 0.8893428, a: 0}
+  Health: 30
+  Armor: 3
+  Attack: 12

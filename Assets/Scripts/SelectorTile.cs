@@ -18,7 +18,7 @@ public class SelectorTile : MonoBehaviour
     }
 
     public void InitializeLocation(Vector3Int location) {
-        if (Location.x != 0 && Location.y != 0 && Location.z != 0) throw new System.Exception("La tile a déjà été positionnée");
+        if (Location.x != 0 && Location.y != 0 && Location.z != 0) throw new System.Exception("La tile a déjà été positionnée.");
         // Copy vector so that it won't be updated later on
         Location = new Vector3Int(location.x, location.y, location.z);
     }

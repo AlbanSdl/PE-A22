@@ -7,6 +7,7 @@ public class InstantiateCharacters : MonoBehaviour
 {
     AllyControl AllyData;
     public GameObject mapManager;
+    public GameObject gameManager;
     public GameObject AllyPrefabA;
     public GameObject AllyPrefabB;
     public int N;
@@ -35,10 +36,12 @@ public class InstantiateCharacters : MonoBehaviour
             return;
         }
         AlliesList.Add(Instantiate(AllyPrefabA));
+        Debug.Log(AlliesList);
         index = AlliesList.Count-1;
         AllyControl ally = AlliesList[index].GetComponent<AllyControl>();
         ally.Awake();
         ally.mapManager = this.mapManager;
+        ally.gameManager = this.gameManager;
         AlliesList[index].GetComponent<SpriteRenderer>().sprite = AlliesList[index].GetComponent<AllyControl>().sprite;
         ShowPortrait(index);
         BattleManager.GetComponent<BattleManager>().UpdateTurnOrder();
@@ -52,6 +55,7 @@ public class InstantiateCharacters : MonoBehaviour
         AlliesList.Add(Instantiate(AllyPrefabB));
         index = AlliesList.Count-1;
         AllyControl ally = AlliesList[index].GetComponent<AllyControl>();
+        ally.gameManager = this.gameManager;
         ally.Awake();
         ally.mapManager = this.mapManager;
         AlliesList[index].GetComponent<SpriteRenderer>().sprite = AlliesList[index].GetComponent<AllyControl>().sprite;
