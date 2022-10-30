@@ -8,6 +8,8 @@ public class InstantiateCharacters : MonoBehaviour
     AllyControl AllyData;
     public GameObject mapManager;
     public GameObject gameManager;
+    public GameObject[] tempBattleMenu;
+    public GameObject[] battleMenu;
     public GameObject AllyPrefabA;
     public GameObject AllyPrefabB;
     public int N;
@@ -18,6 +20,10 @@ public class InstantiateCharacters : MonoBehaviour
 
     void Awake()
     {
+        tempBattleMenu = GameObject.FindGameObjectsWithTag("BattleMenu");
+        foreach (GameObject menu in tempBattleMenu) {
+            menu.SetActive(false);
+        } 
         allPortraits = GameObject.FindGameObjectsWithTag("Portrait");
         foreach (GameObject portrait in allPortraits) {
             Debug.Log(portrait);
@@ -40,6 +46,7 @@ public class InstantiateCharacters : MonoBehaviour
         index = AlliesList.Count-1;
         AllyControl ally = AlliesList[index].GetComponent<AllyControl>();
         ally.Awake();
+        ally.battleMenu = tempBattleMenu;
         ally.mapManager = this.mapManager;
         ally.gameManager = this.gameManager;
         AlliesList[index].GetComponent<SpriteRenderer>().sprite = AlliesList[index].GetComponent<AllyControl>().sprite;
@@ -49,7 +56,7 @@ public class InstantiateCharacters : MonoBehaviour
 
     public void SpawnB() {
         if (AlliesList.Find((obj) => obj.GetComponent<AllyControl>().sprite == AllyPrefabB.GetComponent<AllyControl>().AllyData.Sprite)) {
-            Debug.LogWarning("Character already summonned");
+            Debug.LogWarning("Character already summonned.");
             return;
         }
         AlliesList.Add(Instantiate(AllyPrefabB));

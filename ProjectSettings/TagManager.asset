@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Character
   - Portrait
+  - BattleMenu
   layers:
   - Default
   - TransparentFX

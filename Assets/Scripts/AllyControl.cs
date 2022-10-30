@@ -7,6 +7,7 @@ sealed public class AllyControl : AbstractMovement
     public InstantiateCharacters instances;
     public GameObject gameManager;
     public GameObject mapManager;
+    public GameObject[] battleMenu;
     
     public GameObject pathPrefab;
 
@@ -24,7 +25,6 @@ sealed public class AllyControl : AbstractMovement
         if (AllyData != null) {
             LoadData(AllyData);
         }
-        //instances = gameManager.GetComponent<InstantiateCharacters>();
     }
 
     public void LoadData (AlliesData data) {
@@ -115,16 +115,25 @@ sealed public class AllyControl : AbstractMovement
     protected override void OnMovementFinished() {
         if (this.waitingForBattle != null) {
             // Start battle here. Retrieve Enemy in `this.waitingForBattle`
-            int attackerDamage = attack - this.waitingForBattle.armor;
-            int defenderDamage = Mathf.RoundToInt(this.waitingForBattle.attack - armor * 0.5f);
-            this.waitingForBattle.health -= attack;
-            health -= defenderDamage;
-            Debug.Log(this.waitingForBattle.name + " lost " + attackerDamage + " HP !");
-            Debug.Log(name + " inflicted " + defenderDamage +" damage in return !");
+
+            //GameObject.Find("Contextual Menu").SetActive(true);
+            foreach (GameObject menu in this.battleMenu) {
+                menu.SetActive(true);
+            }
+            Attack();
             this.waitingForBattle = null;
         }
         // End ally turn
         this.GetMapManager().battleManager.GetComponent<BattleManager>().NextTurnStep();
+    }
+
+    public void Attack() {
+        int attackerDamage = attack - this.waitingForBattle.armor;
+        int defenderDamage = Mathf.RoundToInt(this.waitingForBattle.attack - armor * 0.5f);
+        this.waitingForBattle.health -= attack;
+        health -= defenderDamage;
+        Debug.Log(this.waitingForBattle.name + " lost " + attackerDamage + " HP !");
+        Debug.Log(name + " inflicted " + defenderDamage +" damage in return !");
     }
 
 }
