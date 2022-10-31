@@ -1,5 +1,7 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using System.Linq;
+using System.Collections.Generic;
 
 sealed public class AllyControl : AbstractMovement
 {
@@ -19,12 +21,13 @@ sealed public class AllyControl : AbstractMovement
 
     private AllyControl waitingForBattle;
 
+    private HashSet<Vector2Int> PreviewLocations = new HashSet<Vector2Int>();
+
     public void Awake()
     {
         if (AllyData != null) {
             LoadData(AllyData);
         }
-        //instances = gameManager.GetComponent<InstantiateCharacters>();
     }
 
     public void LoadData (AlliesData data) {
@@ -34,6 +37,7 @@ sealed public class AllyControl : AbstractMovement
         initiative = data.Initiative;
         armor = data.Armor;
         attack = data.Attack;
+        MovementRange = data.MovementRange;
     }
 
 
@@ -79,7 +83,10 @@ sealed public class AllyControl : AbstractMovement
     }
 
     public void Select() {
-        this.GetMapManager().selection = this;
+        if (!this.IsMoving()) {
+            this.GetMapManager().selection = this;
+            this.PreviewMovementRange();
+        }
     }
 
     protected override MapManager GetMapManager() {
@@ -127,4 +134,42 @@ sealed public class AllyControl : AbstractMovement
         this.GetMapManager().battleManager.GetComponent<BattleManager>().NextTurnStep();
     }
 
+    public void PreviewMovementRange() {
+        if (this.PreviewLocations.Count() > 0)
+            throw new System.Exception("Il faut appeler AbstractMovement.HideMovementRange avant AbstractMovement.PreviewMovementRange !");
+
+        // Select locations
+        MapManager manager = this.GetMapManager();
+        HashSet<Vector2Int> lastZoneLevel = new HashSet<Vector2Int>();
+        HashSet<Vector2Int> currentLevel = new HashSet<Vector2Int>();
+        lastZoneLevel.Add(this.GetTilePosition());
+        for (int d = 0; d < this.MovementRange; d++) {
+            foreach (var ZoneTile in lastZoneLevel) {
+                SelectorTile tile = manager.map[ZoneTile].GetComponent<SelectorTile>();
+                for (int i = 0; i < 4; i++) {
+                    Vector2Int location = ZoneTile + new Vector2Int((i & 2) == 0 ? (i & 1) * 2 - 1 : 0, (i & 2) != 0 ? (i & 1) * 2 - 1 : 0);
+                    if (tile.CanAccessTo(manager.map[location].GetComponent<SelectorTile>(), true)) currentLevel.Add(location);
+                }
+            }
+            this.PreviewLocations.UnionWith(lastZoneLevel);
+            lastZoneLevel.Clear();
+            lastZoneLevel.UnionWith(currentLevel);
+            currentLevel.Clear();
+        }
+        this.PreviewLocations.UnionWith(lastZoneLevel);
+        this.PreviewLocations.Remove(this.GetTilePosition());
+
+        // Highlight range
+        foreach (var Location in this.PreviewLocations) this.DebugPath(Location);
+    }
+
+    public void HideMovementRange() {
+        foreach (var tileLocation in this.PreviewLocations)
+            this.NotifyTileAnimationEnd(tileLocation);
+        this.PreviewLocations.Clear();
+    }
+
+    protected override void OnPathComputed() {
+        this.HideMovementRange();
+    }
 }
