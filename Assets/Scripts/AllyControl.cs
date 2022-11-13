@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using System.Collections;
 using System.Linq;
 using System.Collections.Generic;
 
@@ -9,6 +10,7 @@ sealed public class AllyControl : AbstractMovement
     public InstantiateCharacters instances;
     public GameObject gameManager;
     public GameObject mapManager;
+    public GameObject[] battleMenu;
     
     public GameObject pathPrefab;
 
@@ -18,6 +20,7 @@ sealed public class AllyControl : AbstractMovement
     public int initiative;
     public int armor;
     public int attack;
+    private bool turnUsed;
 
     private AllyControl waitingForBattle;
 
@@ -122,17 +125,38 @@ sealed public class AllyControl : AbstractMovement
     protected override void OnMovementFinished() {
         if (this.waitingForBattle != null) {
             // Start battle here. Retrieve Enemy in `this.waitingForBattle`
-            int attackerDamage = attack - this.waitingForBattle.armor;
-            int defenderDamage = Mathf.RoundToInt(this.waitingForBattle.attack - armor * 0.5f);
-            this.waitingForBattle.health -= attack;
-            health -= defenderDamage;
-            Debug.Log(this.waitingForBattle.name + " lost " + attackerDamage + " HP !");
-            Debug.Log(name + " inflicted " + defenderDamage +" damage in return !");
+            StartCoroutine(ContextualActions());
             this.waitingForBattle = null;
         }
         // End ally turn
         this.GetMapManager().battleManager.GetComponent<BattleManager>().NextTurnStep();
     }
+
+    public void Attack() {
+        turnUsed = true;
+        int attackerDamage = attack - this.waitingForBattle.armor;
+        int defenderDamage = Mathf.RoundToInt(this.waitingForBattle.attack - armor * 0.5f);
+        this.waitingForBattle.health -= attack;
+        health -= defenderDamage;
+        Debug.Log(this.waitingForBattle.name + " lost " + attackerDamage + " HP !");
+        Debug.Log(name + " inflicted " + defenderDamage +" damage in return !");
+    }
+
+    public void ContextualMenu(bool active) {
+        foreach (GameObject menu in this.battleMenu) {
+                menu.SetActive(active);
+        }
+    }
+
+    IEnumerator ContextualActions() {
+            //GameObject.Find("Contextual Menu").SetActive(true);
+            turnUsed = false;
+            ContextualMenu(true);
+            yield return new WaitUntil(() => turnUsed);
+            Debug.Log("menu off");
+            ContextualMenu(false);
+    }
+
 
     public void PreviewMovementRange() {
         if (this.PreviewLocations.Count() > 0)
