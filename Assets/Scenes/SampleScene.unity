@@ -320,6 +320,7 @@ MonoBehaviour:
   gameManager: {fileID: 334276028}
   allCharacters: []
   deadTemp: []
+  ally: {fileID: 0}
 --- !u!1 &310651156
 GameObject:
   m_ObjectHideFlags: 0
@@ -859,7 +860,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 707259700}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 245732160}
+        m_TargetAssemblyTypeName: BattleManager, Assembly-CSharp
+        m_MethodName: Defend
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &707259700
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1012,7 +1025,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 877444501}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 245732160}
+        m_TargetAssemblyTypeName: BattleManager, Assembly-CSharp
+        m_MethodName: Wait
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &877444501
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1135,8 +1160,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 3108150998877901136, guid: 7a5f03022b1cc1d4696de5bb5b27fe88, type: 3}
-        m_TargetAssemblyTypeName: AllyControl, Assembly-CSharp
+      - m_Target: {fileID: 245732160}
+        m_TargetAssemblyTypeName: BattleManager, Assembly-CSharp
         m_MethodName: Attack
         m_Mode: 1
         m_Arguments:

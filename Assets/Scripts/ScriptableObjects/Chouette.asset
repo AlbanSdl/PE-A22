@@ -18,4 +18,5 @@ MonoBehaviour:
   Health: 5
   Armor: 1
   Attack: 3
-  Color: {r: 0.9056604, g: 0.046991818, b: 0.90199053, a: 0}
+  TempArmor: 1
+  MovementRange: 5

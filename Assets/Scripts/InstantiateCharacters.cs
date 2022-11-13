@@ -26,7 +26,6 @@ public class InstantiateCharacters : MonoBehaviour
         } 
         allPortraits = GameObject.FindGameObjectsWithTag("Portrait");
         foreach (GameObject portrait in allPortraits) {
-            Debug.Log(portrait);
             portrait.SetActive(false);
         }
     }
@@ -51,6 +50,7 @@ public class InstantiateCharacters : MonoBehaviour
         AlliesList[index].GetComponent<SpriteRenderer>().sprite = AlliesList[index].GetComponent<AllyControl>().sprite;
         ShowPortrait(index);
         BattleManager.GetComponent<BattleManager>().UpdateTurnOrder();
+        ally.instances = this;
     }
 
     public void SpawnB() {
@@ -63,10 +63,12 @@ public class InstantiateCharacters : MonoBehaviour
         AllyControl ally = AlliesList[index].GetComponent<AllyControl>();
         ally.gameManager = this.gameManager;
         ally.Awake();
+        ally.battleMenu = tempBattleMenu;
         ally.mapManager = this.mapManager;
         AlliesList[index].GetComponent<SpriteRenderer>().sprite = AlliesList[index].GetComponent<AllyControl>().sprite;
         ShowPortrait(index);
         BattleManager.GetComponent<BattleManager>().UpdateTurnOrder();
+        ally.instances = this;
     }
 
     public void ShowPortrait(int ind) {

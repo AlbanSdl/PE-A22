@@ -18,3 +18,5 @@ MonoBehaviour:
   Health: 30
   Armor: 3
   Attack: 12
+  TempArmor: 3
+  MovementRange: 5

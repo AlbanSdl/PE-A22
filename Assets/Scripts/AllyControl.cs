@@ -20,6 +20,7 @@ sealed public class AllyControl : AbstractMovement
     public int initiative;
     public int armor;
     public int attack;
+    public int tempArmor;
     private bool turnUsed;
 
     private AllyControl waitingForBattle;
@@ -40,6 +41,7 @@ sealed public class AllyControl : AbstractMovement
         initiative = data.Initiative;
         armor = data.Armor;
         attack = data.Attack;
+        tempArmor = data.TempArmor;
         MovementRange = data.MovementRange;
     }
 
@@ -125,24 +127,36 @@ sealed public class AllyControl : AbstractMovement
     protected override void OnMovementFinished() {
         if (this.waitingForBattle != null) {
             // Start battle here. Retrieve Enemy in `this.waitingForBattle`
+            this.tempArmor = this.armor;
+            Debug.Log("start coroutine");
             StartCoroutine(ContextualActions());
-            this.waitingForBattle = null;
         }
         // End ally turn
+        Debug.Log("end turn");
         this.GetMapManager().battleManager.GetComponent<BattleManager>().NextTurnStep();
     }
 
     public void Attack() {
-        turnUsed = true;
-        int attackerDamage = attack - this.waitingForBattle.armor;
-        int defenderDamage = Mathf.RoundToInt(this.waitingForBattle.attack - armor * 0.5f);
+        int attackerDamage = attack - this.waitingForBattle.tempArmor;
+        int defenderDamage = Mathf.RoundToInt(this.waitingForBattle.attack - tempArmor * 0.5f);
         this.waitingForBattle.health -= attack;
         health -= defenderDamage;
         Debug.Log(this.waitingForBattle.name + " lost " + attackerDamage + " HP !");
-        Debug.Log(name + " inflicted " + defenderDamage +" damage in return !");
+        Debug.Log(this.waitingForBattle.name + " inflicted " + defenderDamage +" damage in return !");
+        turnUsed = true;
+    }
+
+    public void Defend() {
+        this.tempArmor = Mathf.RoundToInt(1.5f*this.armor);
+        turnUsed = true;
+    }
+
+    public void Wait() {
+        turnUsed = true;
     }
 
     public void ContextualMenu(bool active) {
+        instances.BattleManager.GetComponent<BattleManager>().ally = active ? this : null;
         foreach (GameObject menu in this.battleMenu) {
                 menu.SetActive(active);
         }
@@ -152,9 +166,14 @@ sealed public class AllyControl : AbstractMovement
             //GameObject.Find("Contextual Menu").SetActive(true);
             turnUsed = false;
             ContextualMenu(true);
+            canMove = false;
+            this.waitingForBattle.canMove = false;
             yield return new WaitUntil(() => turnUsed);
-            Debug.Log("menu off");
             ContextualMenu(false);
+            canMove = true;
+            this.waitingForBattle.canMove = true;
+            this.waitingForBattle = null;
+            this.GetMapManager().battleManager.GetComponent<BattleManager>().NextTurnStep();
     }
 
 

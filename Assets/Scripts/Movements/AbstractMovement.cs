@@ -18,23 +18,27 @@ public abstract class AbstractMovement : MonoBehaviour {
     protected abstract MapManager GetMapManager();
 
     public int MovementRange;
+    public bool canMove = true;
 
     private List<Vector2Int> currentAnimatedPath = new List<Vector2Int>();
     private float? lastAnimationTime = null;
 
     public virtual bool Move(Vector2Int to) {
-        MapManager manager = this.GetMapManager();
-        var path = new PathfindingMap(manager, this.GetTilePosition(), to).ComputePath();
-        if (path == null) {
-            Debug.LogWarning("Il n'y a pas de chemin vers la case sélectionnée");
-            return false;
+        if (canMove == true) {
+            MapManager manager = this.GetMapManager();
+            var path = new PathfindingMap(manager, this.GetTilePosition(), to).ComputePath();
+            if (path == null) {
+                Debug.LogWarning("Il n'y a pas de chemin vers la case sélectionnée");
+                return false;
+            }
+            this.OnPathComputed();
+            path.Reverse();
+            for (int i = 0; i < Math.Min(this.MovementRange, path.Count()); i++) this.DebugPath(path[i]);
+            this.currentAnimatedPath.Add(this.GetTilePosition());
+            this.currentAnimatedPath.AddRange(path.Take(this.MovementRange));
+            return true;
         }
-        this.OnPathComputed();
-        path.Reverse();
-        for (int i = 0; i < Math.Min(this.MovementRange, path.Count()); i++) this.DebugPath(path[i]);
-        this.currentAnimatedPath.Add(this.GetTilePosition());
-        this.currentAnimatedPath.AddRange(path.Take(this.MovementRange));
-        return true;
+        return false;
     }
 
     protected void Update() {

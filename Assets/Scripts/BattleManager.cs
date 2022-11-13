@@ -9,6 +9,7 @@ public class BattleManager : MonoBehaviour
     public List<GameObject> allCharacters;
     public List<GameObject> deadTemp;
     GameObject[] allPortraits;
+    public AllyControl ally;
 
     private int turnIndex = 0;
 
@@ -58,5 +59,17 @@ public class BattleManager : MonoBehaviour
             }
         }
         return null;
+    }
+
+    public void Attack() {
+        this.ally.Attack();
+    }
+
+    public void Defend() {
+        this.ally.Defend();
+    }
+
+    public void Wait() {
+        this.ally.Wait();
     }
 }

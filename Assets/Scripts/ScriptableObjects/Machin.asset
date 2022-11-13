@@ -12,9 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2f01afba98a4884a8256b2819b479f6, type: 3}
   m_Name: Machin
   m_EditorClassIdentifier: 
-  CharacterName: Machin
+  CharacterName: Warrior
   Sprite: {fileID: 21300000, guid: ae59a8070c07ca14b9760a75e78635c1, type: 3}
   Initiative: 7
   Health: 50
   Armor: 6
   Attack: 15
+  TempArmor: 6
+  MovementRange: 5
