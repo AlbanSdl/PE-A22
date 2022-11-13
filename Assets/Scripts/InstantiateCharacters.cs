@@ -12,8 +12,11 @@ public class InstantiateCharacters : MonoBehaviour
     public GameObject[] battleMenu;
     public GameObject AllyPrefabA;
     public GameObject AllyPrefabB;
+    public GameObject EnemyPrefab;
     public int N;
     public List<GameObject> AlliesList;
+    public List<GameObject> EnemiesList;
+    public List<GameObject> CharacterList;
     private int index;
     internal GameObject[] allPortraits;
     public GameObject BattleManager;
@@ -43,10 +46,12 @@ public class InstantiateCharacters : MonoBehaviour
         AlliesList.Add(Instantiate(AllyPrefabA));
         index = AlliesList.Count-1;
         AllyControl ally = AlliesList[index].GetComponent<AllyControl>();
+        CharacterList.Add(ally.gameObject);
         ally.Awake();
         ally.battleMenu = tempBattleMenu;
         ally.mapManager = this.mapManager;
         ally.gameManager = this.gameManager;
+        ally.instances = this;
         AlliesList[index].GetComponent<SpriteRenderer>().sprite = AlliesList[index].GetComponent<AllyControl>().sprite;
         ShowPortrait(index);
         BattleManager.GetComponent<BattleManager>().UpdateTurnOrder();
@@ -61,14 +66,30 @@ public class InstantiateCharacters : MonoBehaviour
         AlliesList.Add(Instantiate(AllyPrefabB));
         index = AlliesList.Count-1;
         AllyControl ally = AlliesList[index].GetComponent<AllyControl>();
+        CharacterList.Add(ally.gameObject);
         ally.gameManager = this.gameManager;
         ally.Awake();
         ally.battleMenu = tempBattleMenu;
         ally.mapManager = this.mapManager;
+        ally.instances = this;
         AlliesList[index].GetComponent<SpriteRenderer>().sprite = AlliesList[index].GetComponent<AllyControl>().sprite;
         ShowPortrait(index);
         BattleManager.GetComponent<BattleManager>().UpdateTurnOrder();
         ally.instances = this;
+    }
+
+    public void SpawnEnemy() {
+        EnemiesList.Add(Instantiate(EnemyPrefab));
+        index = EnemiesList.Count-1;
+        EnemyControl enemy = EnemiesList[index].GetComponent<EnemyControl>();
+        CharacterList.Add(enemy.gameObject);
+        enemy.Awake();
+        enemy.mapManager = this.mapManager;
+        enemy.gameManager = this.gameManager;
+        enemy.instances = this;
+        enemy.GetComponent<SpriteRenderer>().sprite = enemy.sprite;
+        // ShowPortrait(index);
+        BattleManager.GetComponent<BattleManager>().UpdateTurnOrder();
     }
 
     public void ShowPortrait(int ind) {

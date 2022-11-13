@@ -13,7 +13,7 @@ public class MapManager : MonoBehaviour
     // Map tiles dictionary
     public Dictionary<Vector2Int, GameObject> map;
     #nullable enable
-    public AbstractMovement? selection = null;
+    public AbstractMovement<EnemyControl, AllyControl>? selection = null;
 
     public bool ignoreBottomTiles;
 

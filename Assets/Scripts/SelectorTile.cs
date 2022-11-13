@@ -23,16 +23,16 @@ public class SelectorTile : MonoBehaviour
         Location = new Vector3Int(location.x, location.y, location.z);
     }
 
-    public bool CanAccessTo(SelectorTile OtherTile, bool ignoreCharacters = false) {
-        return OtherTile.Location.z >= 0 && Math.Abs(OtherTile.Location.z - Location.z) < 2 && (ignoreCharacters || OtherTile.GetAllyOnTile() == null);
+    public bool CanAccessTo<O, T>(SelectorTile OtherTile, bool ignoreCharacters = false) where T : AbstractMovement<O, T> where O : AbstractMovement<T, O> {
+        return OtherTile.Location.z >= 0 && Math.Abs(OtherTile.Location.z - Location.z) < 2 && OtherTile.GetCharacterOnTile<O, T>() == null && (ignoreCharacters || OtherTile.GetCharacterOnTile<T, O>() == null);
     }
 
     #nullable enable
-    public AllyControl? GetAllyOnTile() {
+    public T? GetCharacterOnTile<O, T>() where T: AbstractMovement<O, T> where O: AbstractMovement<T, O> {
         GameObject[] characters = GameObject.FindGameObjectsWithTag("Character");
         foreach (var character in characters) {
-            AllyControl ally = character.GetComponent<AllyControl>();
-            if (ally.GetCurrentTile() == this) return ally;
+            T enemy = character.GetComponent<T>();
+            if (enemy != null && enemy.GetCurrentTile() == this) return enemy;
         }
         return null;
     }

@@ -20,7 +20,7 @@ public class MouseController : MonoBehaviour {
             if (Input.GetMouseButtonDown(0)) {
                 if (mapManagerScript.selection != null) {
                     // execute movement for `mapManagerScript.selection` to reach `selectorTile.Location`
-                    if (mapManagerScript.selection.Move(new Vector2Int(selectorTile.Location.x, selectorTile.Location.y)))
+                    if (mapManagerScript.selection.Move(new Vector2Int(selectorTile.Location.x, selectorTile.Location.y)) != MovementResult.NONE)
                         mapManagerScript.selection = null;
                 }
             }
