@@ -150,12 +150,11 @@ sealed public class AllyControl : AbstractMovement<EnemyControl, AllyControl>
         if (this.waitingForBattle != null) {
             // Start battle here. Retrieve Enemy in `this.waitingForBattle`
             this.tempArmor = this.armor;
-            Debug.Log("start coroutine");
             StartCoroutine(ContextualActions());
+        } else {
+            // End ally turn
+            this.GetMapManager().battleManager.GetComponent<BattleManager>().NextTurnStep();
         }
-        // End ally turn
-        Debug.Log("end turn");
-        this.GetMapManager().battleManager.GetComponent<BattleManager>().NextTurnStep();
     }
 
     public void Attack() {
@@ -185,17 +184,17 @@ sealed public class AllyControl : AbstractMovement<EnemyControl, AllyControl>
     }
 
     IEnumerator ContextualActions() {
-            //GameObject.Find("Contextual Menu").SetActive(true);
-            turnUsed = false;
-            ContextualMenu(true);
-            canMove = false;
-            this.waitingForBattle.canMove = false;
-            yield return new WaitUntil(() => turnUsed);
-            ContextualMenu(false);
-            canMove = true;
-            this.waitingForBattle.canMove = true;
-            this.waitingForBattle = null;
-            this.GetMapManager().battleManager.GetComponent<BattleManager>().NextTurnStep();
+        //GameObject.Find("Contextual Menu").SetActive(true);
+        turnUsed = false;
+        ContextualMenu(true);
+        canMove = false;
+        this.waitingForBattle.canMove = false;
+        yield return new WaitUntil(() => turnUsed);
+        ContextualMenu(false);
+        canMove = true;
+        this.waitingForBattle.canMove = true;
+        this.waitingForBattle = null;
+        this.GetMapManager().battleManager.GetComponent<BattleManager>().NextTurnStep();
     }
 
 
