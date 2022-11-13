@@ -37,7 +37,6 @@ public class BattleManager : MonoBehaviour
 
     public void UpdateTurnOrder() {
         allCharacters.Sort((GameObject x, GameObject y) => x.GetComponent<AllyControl>().initiative.CompareTo(y.GetComponent<AllyControl>().initiative));
-        // allCharacters = allCharacters.FindAll(c => c.GetComponent<AllyControl>().health > 0);
         allCharacters[turnIndex].GetComponent<AllyControl>().Select();
         for (int i = 0; i < allCharacters.Count; i++) {
             GameObject portrait = GetPortrait(i);

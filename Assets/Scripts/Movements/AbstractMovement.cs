@@ -17,6 +17,8 @@ public abstract class AbstractMovement : MonoBehaviour {
 
     protected abstract MapManager GetMapManager();
 
+    public int MovementRange;
+
     private List<Vector2Int> currentAnimatedPath = new List<Vector2Int>();
     private float? lastAnimationTime = null;
 
@@ -27,10 +29,11 @@ public abstract class AbstractMovement : MonoBehaviour {
             Debug.LogWarning("Il n'y a pas de chemin vers la case sélectionnée");
             return false;
         }
-        foreach (var pathPart in path) this.DebugPath(pathPart);
+        this.OnPathComputed();
         path.Reverse();
+        for (int i = 0; i < Math.Min(this.MovementRange, path.Count()); i++) this.DebugPath(path[i]);
         this.currentAnimatedPath.Add(this.GetTilePosition());
-        this.currentAnimatedPath.AddRange(path);
+        this.currentAnimatedPath.AddRange(path.Take(this.MovementRange));
         return true;
     }
 
@@ -68,6 +71,11 @@ public abstract class AbstractMovement : MonoBehaviour {
         this.NotifyTileAnimationEnd(destination);
     }
 
+    /// <summary>
+    /// Called when the path has been computed (and is valid !) but has not been used yet
+    /// </summary>
+    protected virtual void OnPathComputed() {}
+
     protected virtual void DebugPath(Vector2Int position) {
         // Override this method to add behaviour
     }
@@ -78,5 +86,9 @@ public abstract class AbstractMovement : MonoBehaviour {
 
     protected virtual void OnMovementFinished() {
         // Override this method
+    }
+
+    public bool IsMoving() {
+        return this.currentAnimatedPath.Count() > 0;
     }
 }

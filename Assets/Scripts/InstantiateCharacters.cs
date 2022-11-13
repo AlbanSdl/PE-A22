@@ -42,7 +42,6 @@ public class InstantiateCharacters : MonoBehaviour
             return;
         }
         AlliesList.Add(Instantiate(AllyPrefabA));
-        Debug.Log(AlliesList);
         index = AlliesList.Count-1;
         AllyControl ally = AlliesList[index].GetComponent<AllyControl>();
         ally.Awake();
