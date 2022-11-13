@@ -26,6 +26,7 @@ public class BattleManager : MonoBehaviour
     public void NextTurnStep() {
         deadTemp = allCharacters.FindAll(c => (c.GetComponent<AllyControl>()?.health ?? 0) <= 0 && (c.GetComponent<EnemyControl>()?.health ?? 0) <= 0);
         foreach (GameObject c in deadTemp) {
+            AllyControl ally = c.GetComponent<AllyControl>();
             Destroy(c);
             int itemp = allCharacters.IndexOf(c);
             GameObject portrait = GetPortrait(itemp);
@@ -33,6 +34,9 @@ public class BattleManager : MonoBehaviour
             allCharacters.Remove(c);
             instances.AlliesList.Remove(c); // Make sure it is removed from the proper List
             instances.EnemiesList.Remove(c); // Make sure it is removed from the proper List
+            // Remove player from Enemy "memory"
+            if (ally != null) foreach (GameObject enemy in instances.EnemiesList)
+                enemy.GetComponent<EnemyControl>().Memory.Remove(ally);
         }
         turnIndex = (turnIndex + 1) % allCharacters.Count;
         UpdateTurnOrder();
