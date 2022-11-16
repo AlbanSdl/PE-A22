@@ -11,6 +11,7 @@ public class BattleManager : MonoBehaviour
     GameObject[] allPortraits;
     public AllyControl ally;
 
+    private int enemiesAlive = 1;
     private int turnIndex = 0;
 
 
@@ -38,6 +39,15 @@ public class BattleManager : MonoBehaviour
             if (ally != null) foreach (GameObject enemy in instances.EnemiesList)
                 enemy.GetComponent<EnemyControl>().Memory.Remove(ally);
         }
+        foreach (GameObject e in allCharacters) {
+            if (e.GetComponent<EnemyControl>() != null) {
+                enemiesAlive ++;
+            }
+        }
+        if (enemiesAlive == 0) {
+            Debug.Log("Vous avez terrassé toute l'armée adverse !");
+        }
+        enemiesAlive = 0;
         turnIndex = (turnIndex + 1) % allCharacters.Count;
         UpdateTurnOrder();
     }
