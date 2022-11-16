@@ -1,18 +1,36 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using System.Collections;
-using System.Linq;
 using System.Collections.Generic;
 
-sealed public class AllyControl : AbstractMovement<EnemyControl, AllyControl>
+public class EnemyControl : AbstractMovement<AllyControl, EnemyControl>
 {
-    public AlliesData AllyData;
+    public List<Behaviour<EnemyControl>> Behaviour = new List<Behaviour<EnemyControl>>() {
+        new KillPlayerBehaviour(),
+        new AttackPlayerBehaviour(),
+        new FollowPackBehaviour(),
+        new ExploreKnownTargetLocationBehaviour(),
+        new PatrolBehaviour()
+    };
+    public Dictionary<AllyControl, TargetMemory> Memory = new Dictionary<AllyControl, TargetMemory>();
+    public HashSet<EnemyControl> Pack { get {
+        HashSet<EnemyControl> packMembers = new HashSet<EnemyControl>();
+        HashSet<EnemyControl> waitingMembers = this.GetSameTypeNearby();
+        while (waitingMembers.Count > 0) {
+            packMembers.UnionWith(waitingMembers);
+            HashSet<EnemyControl> computingElements = new HashSet<EnemyControl>(waitingMembers);
+            waitingMembers.Clear();
+            foreach(EnemyControl enemy in computingElements)
+                waitingMembers.UnionWith(enemy.Pack);
+            waitingMembers.ExceptWith(packMembers);
+        }
+        return packMembers;
+    }}
+    public Intent? Intent;
+    public int ViewRadius = 10;
+    public AlliesData EnemyData;
     public InstantiateCharacters instances;
     public GameObject gameManager;
     public GameObject mapManager;
-    public GameObject[] battleMenu;
-    
-    public GameObject pathPrefab;
 
     public Sprite sprite;
     public int health;
@@ -21,16 +39,13 @@ sealed public class AllyControl : AbstractMovement<EnemyControl, AllyControl>
     public int armor;
     public int attack;
     public int tempArmor;
-    private bool turnUsed;
 
-    private EnemyControl waitingForBattle;
-
-    private HashSet<Vector2Int> PreviewLocations = new HashSet<Vector2Int>();
+    private AllyControl waitingForBattle;
 
     public void Awake()
     {
-        if (AllyData != null) {
-            LoadData(AllyData);
+        if (EnemyData != null) {
+            LoadData(EnemyData);
         }
     }
 
@@ -53,6 +68,17 @@ sealed public class AllyControl : AbstractMovement<EnemyControl, AllyControl>
     private SelectorTile GetTileAtReal(Vector3 position) {
         Vector3Int cellPosition = mapManager.GetComponent<Tilemap>().WorldToCell(position);
         return GetTileAt(new Vector2Int(cellPosition.x, cellPosition.y));
+    }
+
+    private HashSet<EnemyControl> GetSameTypeNearby() {
+        HashSet<EnemyControl> packMembers = new HashSet<EnemyControl>();
+        Vector2Int cellPosition = (Vector2Int) mapManager.GetComponent<Tilemap>().WorldToCell(this.GetPosition());
+        for (int i = 0; i < 4; i++) {
+            Vector2Int location = cellPosition + new Vector2Int((i & 2) == 0 ? (i & 1) * 2 - 1 : 0, (i & 2) != 0 ? (i & 1) * 2 - 1 : 0);
+            EnemyControl enemy = GetTileAt(location).GetCharacterOnTile<AllyControl, EnemyControl>();
+            if (enemy != null) packMembers.Add(enemy);
+        }
+        return packMembers;
     }
 
     private SelectorTile GetTileAt(Vector2Int position) {
@@ -88,10 +114,7 @@ sealed public class AllyControl : AbstractMovement<EnemyControl, AllyControl>
     }
 
     public void Select() {
-        if (!this.IsMoving()) {
-            this.GetMapManager().selection = this;
-            this.PreviewMovementRange();
-        }
+        if (!this.IsMoving()) this.ExecuteAction();
     }
 
     protected override MapManager GetMapManager() {
@@ -111,7 +134,7 @@ sealed public class AllyControl : AbstractMovement<EnemyControl, AllyControl>
             this.HighlightCurrentTile();
             if (result == MovementResult.PARTIAL) return result;
             // Detect whether a battle will start after movement
-            EnemyControl other = GetTileAt(to).GetCharacterOnTile<AllyControl, EnemyControl>();
+            AllyControl other = GetTileAt(to).GetCharacterOnTile<EnemyControl, AllyControl>();
             if (other != null) {
                 this.waitingForBattle = other;
                 this.PopDestination();
@@ -122,26 +145,6 @@ sealed public class AllyControl : AbstractMovement<EnemyControl, AllyControl>
     }
 
     protected override void NotifyTileAnimationEnd(Vector2Int position) {
-        foreach (GameObject gameObject in this.instances.EnemiesList) {
-            EnemyControl enemy = gameObject.GetComponent<EnemyControl>();
-            Vector2Int enemyLocation = (Vector2Int) enemy.GetCurrentTile().Location;
-            if ((position - enemyLocation).sqrMagnitude <= enemy.ViewRadius * enemy.ViewRadius) {
-                // update location
-                if (enemy.Memory.ContainsKey(this)) {
-                    TargetMemory memory = enemy.Memory[this];
-                    memory.IsAccurate = true;
-                    memory.Location = position;
-                    memory.health = this.health;
-                    memory.initiative = this.initiative;
-                    memory.armor = this.armor;
-                    memory.attack = this.attack;
-                }
-                else enemy.Memory[this] = new TargetMemory(position, this.health, this.initiative, this.armor, this.attack);
-            } else {
-                // mark as non-accurate
-                if (enemy.Memory.ContainsKey(this)) enemy.Memory[this].IsAccurate = false;
-            }
-        }
         SelectorTile tile = this.GetTileAt(position);
         tile.GetComponent<SpriteRenderer>().color = new Color(0, 0, 0, 0);
     }
@@ -150,59 +153,20 @@ sealed public class AllyControl : AbstractMovement<EnemyControl, AllyControl>
         if (this.waitingForBattle != null) {
             // Start battle here. Retrieve Enemy in `this.waitingForBattle`
             this.tempArmor = this.armor;
-            StartCoroutine(ContextualActions());
-        } else {
-            // End ally turn
-            this.GetMapManager().battleManager.GetComponent<BattleManager>().NextTurnStep();
+            int attackerDamage = attack - this.waitingForBattle.armor;
+            int defenderDamage = Mathf.RoundToInt(this.waitingForBattle.attack - armor * 0.5f);
+            this.waitingForBattle.health -= attack;
+            health -= defenderDamage;
+            Debug.Log(this.waitingForBattle.name + " lost " + attackerDamage + " HP !");
+            Debug.Log(name + " inflicted " + defenderDamage + " damage in return !");
+            this.waitingForBattle = null;
         }
-    }
-
-    public void Attack() {
-        int attackerDamage = attack - this.waitingForBattle.tempArmor;
-        int defenderDamage = Mathf.RoundToInt(this.waitingForBattle.attack - tempArmor * 0.5f);
-        this.waitingForBattle.health -= attack;
-        health -= defenderDamage;
-        Debug.Log(this.waitingForBattle.name + " lost " + attackerDamage + " HP !");
-        Debug.Log(this.waitingForBattle.name + " inflicted " + defenderDamage +" damage in return !");
-        turnUsed = true;
-    }
-
-    public void Defend() {
-        this.tempArmor = Mathf.RoundToInt(1.5f*this.armor);
-        turnUsed = true;
-    }
-
-    public void Wait() {
-        turnUsed = true;
-    }
-
-    public void ContextualMenu(bool active) {
-        instances.BattleManager.GetComponent<BattleManager>().ally = active ? this : null;
-        foreach (GameObject menu in this.battleMenu) {
-                menu.SetActive(active);
-        }
-    }
-
-    IEnumerator ContextualActions() {
-        //GameObject.Find("Contextual Menu").SetActive(true);
-        turnUsed = false;
-        ContextualMenu(true);
-        canMove = false;
-        this.waitingForBattle.canMove = false;
-        yield return new WaitUntil(() => turnUsed);
-        ContextualMenu(false);
-        canMove = true;
-        this.waitingForBattle.canMove = true;
-        this.waitingForBattle = null;
+        // End enemy turn
         this.GetMapManager().battleManager.GetComponent<BattleManager>().NextTurnStep();
     }
 
-
-    public void PreviewMovementRange() {
-        if (this.PreviewLocations.Count() > 0)
-            throw new System.Exception("Il faut appeler AbstractMovement.HideMovementRange avant AbstractMovement.PreviewMovementRange !");
-
-        // Select locations
+    public HashSet<Vector2Int> GetPossibleMovements() {
+        HashSet<Vector2Int> locations = new HashSet<Vector2Int>();
         MapManager manager = this.GetMapManager();
         HashSet<Vector2Int> lastZoneLevel = new HashSet<Vector2Int>();
         HashSet<Vector2Int> currentLevel = new HashSet<Vector2Int>();
@@ -212,28 +176,36 @@ sealed public class AllyControl : AbstractMovement<EnemyControl, AllyControl>
                 SelectorTile tile = manager.map[ZoneTile].GetComponent<SelectorTile>();
                 for (int i = 0; i < 4; i++) {
                     Vector2Int location = ZoneTile + new Vector2Int((i & 2) == 0 ? (i & 1) * 2 - 1 : 0, (i & 2) != 0 ? (i & 1) * 2 - 1 : 0);
-                    if (tile.CanAccessTo<EnemyControl, AllyControl>(manager.map[location].GetComponent<SelectorTile>(), true)) currentLevel.Add(location);
+                    if (tile.CanAccessTo<AllyControl, EnemyControl>(manager.map[location].GetComponent<SelectorTile>(), true)) currentLevel.Add(location);
                 }
             }
-            this.PreviewLocations.UnionWith(lastZoneLevel);
+            locations.UnionWith(lastZoneLevel);
             lastZoneLevel.Clear();
             lastZoneLevel.UnionWith(currentLevel);
             currentLevel.Clear();
         }
-        this.PreviewLocations.UnionWith(lastZoneLevel);
-        this.PreviewLocations.Remove(this.GetTilePosition());
-
-        // Highlight range
-        foreach (var Location in this.PreviewLocations) this.DebugPath(Location);
+        locations.UnionWith(lastZoneLevel);
+        locations.Remove(this.GetTilePosition());
+        return locations;
     }
 
-    public void HideMovementRange() {
-        foreach (var tileLocation in this.PreviewLocations)
-            this.NotifyTileAnimationEnd(tileLocation);
-        this.PreviewLocations.Clear();
+    private Intent? ChooseAction() {
+        for (int i = 0; i < this.Behaviour.Count; i++) {
+            Intent? action = this.Behaviour[i].Compute(this);
+            if (action != null) return action;
+        }
+        return null;
     }
 
-    protected override void OnPathComputed() {
-        this.HideMovementRange();
+    public void ExecuteAction() {
+        Intent? intent = this.ChooseAction();
+        if (intent == null) {
+            Debug.LogWarning("No Intent chosen: skipping turn");
+            this.GetMapManager().battleManager.GetComponent<BattleManager>().NextTurnStep();
+        }
+        else {
+            Debug.Log(intent.Value.Type);
+            this.Move(intent.Value.Location);
+        }
     }
 }

@@ -3,7 +3,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 
-public abstract class AbstractMovement : MonoBehaviour {
+public abstract class AbstractMovement<O, T> : MonoBehaviour where T : AbstractMovement<O, T> where O : AbstractMovement<T, O> {
 
     public const float MOVEMENT_ANIMATION_DURATION = .09f;
 
@@ -23,22 +23,22 @@ public abstract class AbstractMovement : MonoBehaviour {
     private List<Vector2Int> currentAnimatedPath = new List<Vector2Int>();
     private float? lastAnimationTime = null;
 
-    public virtual bool Move(Vector2Int to) {
+    public virtual MovementResult Move(Vector2Int to) {
         if (canMove == true) {
             MapManager manager = this.GetMapManager();
-            var path = new PathfindingMap(manager, this.GetTilePosition(), to).ComputePath();
+            var path = new PathfindingMap<O, T>(manager, this.GetTilePosition(), to).ComputePath();
             if (path == null) {
                 Debug.LogWarning("Il n'y a pas de chemin vers la case sélectionnée");
-                return false;
+                return MovementResult.NONE;
             }
             this.OnPathComputed();
             path.Reverse();
             for (int i = 0; i < Math.Min(this.MovementRange, path.Count()); i++) this.DebugPath(path[i]);
             this.currentAnimatedPath.Add(this.GetTilePosition());
             this.currentAnimatedPath.AddRange(path.Take(this.MovementRange));
-            return true;
+            return path.Count > this.MovementRange ? MovementResult.PARTIAL : MovementResult.FULL;
         }
-        return false;
+        return MovementResult.NONE;
     }
 
     protected void Update() {
@@ -95,4 +95,11 @@ public abstract class AbstractMovement : MonoBehaviour {
     public bool IsMoving() {
         return this.currentAnimatedPath.Count() > 0;
     }
+
+    public abstract SelectorTile GetCurrentTile();
+
+}
+
+public enum MovementResult {
+    FULL, PARTIAL, NONE
 }

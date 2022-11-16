@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class PathfindingMap {
+public class PathfindingMap<O, T> where T : AbstractMovement<O, T> where O : AbstractMovement<T, O> {
     private Dictionary<Vector2Int, PathfindingNode> Nodes;
     private Vector2Int StartingNodeLocation;
 
@@ -10,25 +10,25 @@ public class PathfindingMap {
         StartingNodeLocation = from;
         foreach (var tile in MapManager.map) {
             PathfindingDirection direction = 0;
-            if (MapManager.map.ContainsKey(new Vector2Int(tile.Key.x, tile.Key.y + 1)) && tile.Value.GetComponent<SelectorTile>().CanAccessTo(
+            if (MapManager.map.ContainsKey(new Vector2Int(tile.Key.x, tile.Key.y + 1)) && tile.Value.GetComponent<SelectorTile>().CanAccessTo<O, T>(
                 MapManager.map[new Vector2Int(tile.Key.x, tile.Key.y + 1)]?.GetComponent<SelectorTile>(),
                 new Vector2Int(tile.Key.x, tile.Key.y + 1) == to
             )) {
                 direction |= PathfindingDirection.UP;
             }
-            if (MapManager.map.ContainsKey(new Vector2Int(tile.Key.x, tile.Key.y - 1)) && tile.Value.GetComponent<SelectorTile>().CanAccessTo(
+            if (MapManager.map.ContainsKey(new Vector2Int(tile.Key.x, tile.Key.y - 1)) && tile.Value.GetComponent<SelectorTile>().CanAccessTo<O, T>(
                 MapManager.map[new Vector2Int(tile.Key.x, tile.Key.y - 1)]?.GetComponent<SelectorTile>(),
                 new Vector2Int(tile.Key.x, tile.Key.y - 1) == to
             )) {
                 direction |= PathfindingDirection.DOWN;
             }
-            if (MapManager.map.ContainsKey(new Vector2Int(tile.Key.x + 1, tile.Key.y)) && tile.Value.GetComponent<SelectorTile>().CanAccessTo(
+            if (MapManager.map.ContainsKey(new Vector2Int(tile.Key.x + 1, tile.Key.y)) && tile.Value.GetComponent<SelectorTile>().CanAccessTo<O, T>(
                 MapManager.map[new Vector2Int(tile.Key.x + 1, tile.Key.y)].GetComponent<SelectorTile>(),
                 new Vector2Int(tile.Key.x + 1, tile.Key.y) == to
             )) {
                 direction |= PathfindingDirection.RIGHT;
             }
-            if (MapManager.map.ContainsKey(new Vector2Int(tile.Key.x - 1, tile.Key.y)) && tile.Value.GetComponent<SelectorTile>().CanAccessTo(
+            if (MapManager.map.ContainsKey(new Vector2Int(tile.Key.x - 1, tile.Key.y)) && tile.Value.GetComponent<SelectorTile>().CanAccessTo<O, T>(
                 MapManager.map[new Vector2Int(tile.Key.x - 1, tile.Key.y)]?.GetComponent<SelectorTile>(),
                 new Vector2Int(tile.Key.x - 1, tile.Key.y) == to
             )) {
