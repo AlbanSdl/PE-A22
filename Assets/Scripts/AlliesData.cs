@@ -14,4 +14,5 @@ public class AlliesData : ScriptableObject {
     public int Attack;
     public int TempArmor;
     public int MovementRange = 5;
+    public Weapon Weapon;
 }

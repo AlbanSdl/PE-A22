@@ -20,3 +20,4 @@ MonoBehaviour:
   Attack: 12
   TempArmor: 3
   MovementRange: 5
+  Weapon: {fileID: 11400000, guid: 8c3d0b16070ce4844a1215009dd67e65, type: 2}

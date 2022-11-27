@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 using System.Collections.Generic;
 
-public class EnemyControl : AbstractMovement<AllyControl, EnemyControl>
+sealed public class EnemyControl : Character<EnemyControl, AllyControl>
 {
     public List<Behaviour<EnemyControl>> Behaviour = new List<Behaviour<EnemyControl>>() {
         new KillPlayerBehaviour(),
@@ -27,48 +27,6 @@ public class EnemyControl : AbstractMovement<AllyControl, EnemyControl>
     }}
     public Intent? Intent;
     public int ViewRadius = 10;
-    public AlliesData EnemyData;
-    public InstantiateCharacters instances;
-    public GameObject gameManager;
-    public GameObject mapManager;
-
-    public Sprite sprite;
-    public int health;
-    public new string name;
-    public int initiative;
-    public int armor;
-    public int attack;
-    public int tempArmor;
-
-    private AllyControl waitingForBattle;
-
-    public void Awake()
-    {
-        if (EnemyData != null) {
-            LoadData(EnemyData);
-        }
-    }
-
-    public void LoadData (AlliesData data) {
-        health = data.Health;
-        sprite = data.Sprite;
-        name = data.CharacterName;
-        initiative = data.Initiative;
-        armor = data.Armor;
-        attack = data.Attack;
-        tempArmor = data.TempArmor;
-        MovementRange = data.MovementRange;
-    }
-
-
-    public override SelectorTile GetCurrentTile() {
-        return this.GetTileAtReal(this.GetPosition());
-    }
-
-    private SelectorTile GetTileAtReal(Vector3 position) {
-        Vector3Int cellPosition = mapManager.GetComponent<Tilemap>().WorldToCell(position);
-        return GetTileAt(new Vector2Int(cellPosition.x, cellPosition.y));
-    }
 
     private HashSet<EnemyControl> GetSameTypeNearby() {
         HashSet<EnemyControl> packMembers = new HashSet<EnemyControl>();
@@ -81,67 +39,8 @@ public class EnemyControl : AbstractMovement<AllyControl, EnemyControl>
         return packMembers;
     }
 
-    private SelectorTile GetTileAt(Vector2Int position) {
-        return mapManager.GetComponent<MapManager>().map[position].GetComponent<SelectorTile>();
-    }
-
-    // Debug method
-    public void HighlightCurrentTile() {
-        SelectorTile test = GetCurrentTile();
-        test.GetComponent<SpriteRenderer>().color = new Color(1, 0, 0, 1);
-    }
-
-    protected override Vector2Int GetTilePosition() {
-        Vector3Int currentLocation = this.GetCurrentTile().Location;
-        return new Vector2Int(currentLocation.x, currentLocation.y);
-    }
-
-    protected override Vector3 GetPosition() {
-        return new Vector3(transform.position.x, transform.position.y - ((RectTransform) transform).rect.height / 2, transform.position.z);
-    }
-
-    private Vector3 ComputePosition(Vector2Int position) {
-        SelectorTile tile = GetMapManager().map[position].GetComponent<SelectorTile>();
-        return mapManager.GetComponent<Tilemap>().CellToWorld(tile.Location) + new Vector3(0, ((RectTransform) transform).rect.height * 3 / 4, 0);
-    }
-
-    protected override void SetTilePosition(Vector2Int position) {
-        transform.position = ComputePosition(position);
-    }
-
-    protected override void SetTileAnimationPosition(Vector2Int from, Vector2Int to, float progression) {
-        transform.position = ComputePosition(from) + (ComputePosition(to) - ComputePosition(from)) * progression;
-    }
-
     public void Select() {
         if (!this.IsMoving()) this.ExecuteAction();
-    }
-
-    protected override MapManager GetMapManager() {
-        return mapManager.GetComponent<MapManager>();
-    }
-
-    // Debug method
-    protected override void DebugPath(Vector2Int position) {
-        SelectorTile tile = this.GetTileAt(position);
-        tile.GetComponent<SpriteRenderer>().color = new Color(1, 1, 0, 1);
-    }
-
-    public override MovementResult Move(Vector2Int to) {
-        if (to == this.GetTilePosition()) return MovementResult.NONE;
-        MovementResult result = base.Move(to);
-        if (result != MovementResult.NONE) {
-            this.HighlightCurrentTile();
-            if (result == MovementResult.PARTIAL) return result;
-            // Detect whether a battle will start after movement
-            AllyControl other = GetTileAt(to).GetCharacterOnTile<EnemyControl, AllyControl>();
-            if (other != null) {
-                this.waitingForBattle = other;
-                this.PopDestination();
-            }
-            return result;
-        }
-        return result;
     }
 
     protected override void NotifyTileAnimationEnd(Vector2Int position) {
@@ -153,12 +52,7 @@ public class EnemyControl : AbstractMovement<AllyControl, EnemyControl>
         if (this.waitingForBattle != null) {
             // Start battle here. Retrieve Enemy in `this.waitingForBattle`
             this.tempArmor = this.armor;
-            int attackerDamage = attack - this.waitingForBattle.armor;
-            int defenderDamage = Mathf.RoundToInt(this.waitingForBattle.attack - armor * 0.5f);
-            this.waitingForBattle.health -= attack;
-            health -= defenderDamage;
-            Debug.Log(this.waitingForBattle.name + " lost " + attackerDamage + " HP !");
-            Debug.Log(name + " inflicted " + defenderDamage + " damage in return !");
+            this.Attack();
             this.waitingForBattle = null;
         }
         // End enemy turn
