@@ -2,6 +2,11 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 
+/// <summary>
+/// This is a behaviour that can be applied to an <see cref="EnemyControl"/>.
+/// Using this behaviour, an enemy will follow other enemies to attack and kill players, even if the so-called
+/// players are not in the range of this enemy.
+/// </summary>
 public class FollowPackBehaviour : Behaviour<EnemyControl> {
 
     public int HealthWeight = 1;

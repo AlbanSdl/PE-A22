@@ -1,6 +1,11 @@
 using UnityEngine;
 using System.Collections.Generic;
 
+/// <summary>
+/// This is a behaviour that can be applied to an <see cref="EnemyControl"/>.
+/// Using this behaviour, an enemy will move randomly. This is the last behaviour you should use,
+/// only when all the other behaviours failed to give an <see cref="Intent"/>.
+/// </summary>
 public class PatrolBehaviour : Behaviour<EnemyControl> {
 
     public Intent? Compute(EnemyControl enemyControl) {
