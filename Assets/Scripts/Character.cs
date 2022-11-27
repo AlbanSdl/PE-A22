@@ -16,11 +16,21 @@ public abstract class Character<This, Enemy> : AbstractMovement<Enemy, This> whe
     public int tempArmor;
     protected bool turnUsed;
     public Weapon weapon;
+    public HealthBar healthBar;
 
     protected Character<Enemy, This> waitingForBattle;
 
+    GameObject swordIcon;
+    GameObject shieldIcon;
+    GameObject bowIcon;
     public void Awake()
     {
+        swordIcon = transform.GetChild(0).GetChild(5).gameObject;
+        shieldIcon = transform.GetChild(0).GetChild(4).gameObject;
+        bowIcon = transform.GetChild(0).GetChild(3).gameObject;
+        swordIcon.SetActive(false);
+        shieldIcon.SetActive(false);
+        bowIcon.SetActive(false);
         if (AllyData != null) {
             LoadData(AllyData);
         }
@@ -36,6 +46,15 @@ public abstract class Character<This, Enemy> : AbstractMovement<Enemy, This> whe
         tempArmor = data.TempArmor;
         MovementRange = data.MovementRange;
         weapon = data.Weapon;
+        if (weapon.name == "Sword") {
+            Debug.Log(swordIcon);
+            swordIcon.SetActive(true);
+        } else if (weapon.name == "Bow") {
+            transform.GetChild(0).GetChild(3).gameObject.SetActive(true);
+        } else {
+            transform.GetChild(0).GetChild(4).gameObject.SetActive(true);
+        }
+        healthBar = (HealthBar)transform.GetChild(0).gameObject.GetComponentInChildren(typeof(HealthBar), false);
     }
 
     public override SelectorTile GetCurrentTile() {
@@ -107,6 +126,8 @@ public abstract class Character<This, Enemy> : AbstractMovement<Enemy, This> whe
     }
 
     public void Attack() {
+        int maxHealth = AllyData.Health;
+        int enemyMaxHealth = this.waitingForBattle.AllyData.Health;
         // Compute damage for opponent
         int attackerDamage = attack;
         if (this.weapon.ExtraDamageForWeapon == this.waitingForBattle.weapon)
@@ -120,6 +141,8 @@ public abstract class Character<This, Enemy> : AbstractMovement<Enemy, This> whe
         // Apply damage
         this.waitingForBattle.health -= attack;
         health -= defenderDamage;
+        healthBar.HealthSize(((float)health/maxHealth));
+        this.waitingForBattle.healthBar.HealthSize(((float)this.waitingForBattle.health/enemyMaxHealth));
         Debug.Log(this.waitingForBattle.name + " lost " + attackerDamage + " HP !");
         Debug.Log(this.waitingForBattle.name + " inflicted " + defenderDamage +" damage in return !");
         turnUsed = true;

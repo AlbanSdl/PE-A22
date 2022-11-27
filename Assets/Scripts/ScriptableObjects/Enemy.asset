@@ -17,7 +17,7 @@ MonoBehaviour:
   Initiative: 7
   Health: 30
   Armor: 5
-  Attack: 15
+  Attack: 10
   TempArmor: 5
   MovementRange: 5
   Weapon: {fileID: 11400000, guid: c5646bbab3c1fd443be985d065691c31, type: 2}
