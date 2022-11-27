@@ -128,8 +128,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MovementRange: 0
-  ViewRadius: 10
-  EnemyData: {fileID: 11400000, guid: a0f2f50f97de5d9448c363a7c72b0d31, type: 2}
+  canMove: 1
+  AllyData: {fileID: 11400000, guid: a0f2f50f97de5d9448c363a7c72b0d31, type: 2}
   instances: {fileID: 0}
   gameManager: {fileID: 0}
   mapManager: {fileID: 0}
@@ -139,3 +139,6 @@ MonoBehaviour:
   initiative: 0
   armor: 0
   attack: 0
+  tempArmor: 0
+  weapon: {fileID: 0}
+  ViewRadius: 10

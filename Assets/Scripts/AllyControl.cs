@@ -7,7 +7,6 @@ sealed public class AllyControl : Character<AllyControl, EnemyControl>
 {
     public GameObject[] battleMenu;
     public GameObject pathPrefab;
-    private bool turnUsed;
 
     private HashSet<Vector2Int> PreviewLocations = new HashSet<Vector2Int>();
 
@@ -62,7 +61,6 @@ sealed public class AllyControl : Character<AllyControl, EnemyControl>
     }
 
     IEnumerator ContextualActions() {
-        //GameObject.Find("Contextual Menu").SetActive(true);
         turnUsed = false;
         ContextualMenu(true);
         canMove = false;

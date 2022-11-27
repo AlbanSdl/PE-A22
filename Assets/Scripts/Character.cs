@@ -14,10 +14,10 @@ public abstract class Character<This, Enemy> : AbstractMovement<Enemy, This> whe
     public int armor;
     public int attack;
     public int tempArmor;
-    private bool turnUsed;
+    protected bool turnUsed;
     public Weapon weapon;
 
-    protected Character<This, Enemy> waitingForBattle;
+    protected Character<Enemy, This> waitingForBattle;
 
     public void Awake()
     {
@@ -96,7 +96,7 @@ public abstract class Character<This, Enemy> : AbstractMovement<Enemy, This> whe
             this.HighlightCurrentTile();
             if (result == MovementResult.PARTIAL) return result;
             // Detect whether a battle will start after movement
-            Character<This, Enemy> other = GetTileAt(to).GetCharacterOnTile<Enemy, This>();
+            Character<Enemy, This> other = GetTileAt(to).GetCharacterOnTile<This, Enemy>();
             if (other != null) {
                 this.waitingForBattle = other;
                 this.PopDestination();
