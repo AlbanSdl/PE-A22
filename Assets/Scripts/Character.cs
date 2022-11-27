@@ -109,12 +109,12 @@ public abstract class Character<This, Enemy> : AbstractMovement<Enemy, This> whe
     public void Attack() {
         // Compute damage for opponent
         int attackerDamage = attack;
-        if (this.weapon.ExtraDamageForWeapon.name == this.waitingForBattle.weapon.name)
+        if (this.weapon.ExtraDamageForWeapon == this.waitingForBattle.weapon)
             attackerDamage = Mathf.RoundToInt(attackerDamage * this.weapon.ExtraDamageMultiplier);
         attackerDamage -= this.waitingForBattle.tempArmor;
         // Compute self damage
         int defenderDamage = this.waitingForBattle.attack;
-        if (this.waitingForBattle.weapon.ExtraDamageForWeapon.name == this.weapon.name)
+        if (this.waitingForBattle.weapon.ExtraDamageForWeapon == this.weapon)
             defenderDamage = Mathf.RoundToInt(defenderDamage * this.waitingForBattle.weapon.ExtraDamageMultiplier);
         defenderDamage = Mathf.RoundToInt(defenderDamage - tempArmor * 0.5f);
         // Apply damage
