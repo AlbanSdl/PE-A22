@@ -2,6 +2,10 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 
+/// <summary>
+/// This is a behaviour that can be applied to an <see cref="EnemyControl"/>.
+/// Using this behaviour, an enemy will explore the last known position of a killable player
+/// </summary>
 public class ExploreKnownTargetLocationBehaviour : Behaviour<EnemyControl> {
 
     public int HealthWeight = 5;
