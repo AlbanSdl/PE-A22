@@ -11,7 +11,7 @@ public abstract class AbstractMovement<O, T> : MonoBehaviour where T : AbstractM
 
     protected abstract Vector3 GetPosition();
 
-    protected abstract void SetTilePosition(Vector2Int position);
+    public abstract void SetTilePosition(Vector2Int position);
 
     protected abstract void SetTileAnimationPosition(Vector2Int from, Vector2Int to, float progression);
 

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,7 +14,8 @@ public class InstantiateCharacters : MonoBehaviour
     public GameObject AllyPrefabA;
     public GameObject AllyPrefabB;
     public GameObject EnemyPrefab;
-    public int N;
+    public GameObject startGameButton;
+    public int enemyCount = 2;
     public List<GameObject> AlliesList;
     public List<GameObject> EnemiesList;
     public List<GameObject> CharacterList;
@@ -33,37 +35,12 @@ public class InstantiateCharacters : MonoBehaviour
         }
     }
 
-    void Update()
-    {
-        
-    }
-
-    public void SpawnA() {
-        if (AlliesList.Find((obj) => obj.GetComponent<AllyControl>().sprite == AllyPrefabA.GetComponent<AllyControl>().AllyData.Sprite)) {
-            Debug.LogWarning("Character already summonned");
-            return;
-        }
-        AlliesList.Add(Instantiate(AllyPrefabA));
-        index = AlliesList.Count-1;
-        AllyControl ally = AlliesList[index].GetComponent<AllyControl>();
-        CharacterList.Add(ally.gameObject);
-        ally.Awake();
-        ally.battleMenu = tempBattleMenu;
-        ally.mapManager = this.mapManager;
-        ally.gameManager = this.gameManager;
-        ally.instances = this;
-        AlliesList[index].GetComponent<SpriteRenderer>().sprite = AlliesList[index].GetComponent<AllyControl>().sprite;
-        ShowPortrait(index);
-        BattleManager.GetComponent<BattleManager>().UpdateTurnOrder();
-        ally.instances = this;
-    }
-
-    public void SpawnB() {
-        if (AlliesList.Find((obj) => obj.GetComponent<AllyControl>().sprite == AllyPrefabB.GetComponent<AllyControl>().AllyData.Sprite)) {
+    private void SpawnAlly(GameObject prefab, Vector2Int location) {
+        if (AlliesList.Find((obj) => obj.GetComponent<AllyControl>().sprite == prefab.GetComponent<AllyControl>().AllyData.Sprite)) {
             Debug.LogWarning("Character already summonned.");
             return;
         }
-        AlliesList.Add(Instantiate(AllyPrefabB));
+        AlliesList.Add(Instantiate(prefab));
         index = AlliesList.Count-1;
         AllyControl ally = AlliesList[index].GetComponent<AllyControl>();
         CharacterList.Add(ally.gameObject);
@@ -74,11 +51,11 @@ public class InstantiateCharacters : MonoBehaviour
         ally.instances = this;
         AlliesList[index].GetComponent<SpriteRenderer>().sprite = AlliesList[index].GetComponent<AllyControl>().sprite;
         ShowPortrait(index);
-        BattleManager.GetComponent<BattleManager>().UpdateTurnOrder();
+        ally.SetTilePosition(location);
         ally.instances = this;
     }
 
-    public void SpawnEnemy() {
+    private void SpawnEnemy(Vector2Int location) {
         EnemiesList.Add(Instantiate(EnemyPrefab));
         index = EnemiesList.Count-1;
         EnemyControl enemy = EnemiesList[index].GetComponent<EnemyControl>();
@@ -89,7 +66,34 @@ public class InstantiateCharacters : MonoBehaviour
         enemy.instances = this;
         enemy.GetComponent<SpriteRenderer>().sprite = enemy.sprite;
         // ShowPortrait(index);
+        enemy.SetTilePosition(location);
+    }
+
+    public void InitializeGame() {
+        startGameButton.SetActive(false);
+        this.InitializeAllies();
+        this.InitializeEnemies(enemyCount);
         BattleManager.GetComponent<BattleManager>().UpdateTurnOrder();
+    }
+
+    public void InitializeAllies() {
+        SpawnAlly(AllyPrefabA, new Vector2Int(1, 0));
+        SpawnAlly(AllyPrefabB, new Vector2Int(0, 0));
+    }
+
+    public void InitializeEnemies(int count) {
+        MapManager mapManager = this.mapManager.GetComponent<MapManager>();
+        List<SelectorTile> tileList = new List<GameObject>(mapManager.map.Values)
+            .Select(tile => tile.GetComponent<SelectorTile>())
+            .Where(tile => tile.Location.z > 0)
+            .ToList();
+        for (int i = 0; i < count; i++) {
+            // Choose coordinates where to spawn the enemy
+            int index = Random.Range(0, tileList.Count);
+            SelectorTile tile = tileList[index];
+            tileList.RemoveAt(index);
+            SpawnEnemy((Vector2Int) tile.Location);
+        }
     }
 
     public void ShowPortrait(int ind) {

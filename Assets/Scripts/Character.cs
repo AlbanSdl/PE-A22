@@ -90,7 +90,7 @@ public abstract class Character<This, Enemy> : AbstractMovement<Enemy, This> whe
         return mapManager.GetComponent<Tilemap>().CellToWorld(tile.Location) + new Vector3(0, ((RectTransform) transform).rect.height * 3 / 4, 0);
     }
 
-    protected override void SetTilePosition(Vector2Int position) {
+    public override void SetTilePosition(Vector2Int position) {
         transform.position = ComputePosition(position);
     }
 
