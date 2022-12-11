@@ -128,18 +128,23 @@ public abstract class Character<This, Enemy> : AbstractMovement<Enemy, This> whe
     public void Attack() {
         int maxHealth = AllyData.Health;
         int enemyMaxHealth = this.waitingForBattle.AllyData.Health;
+        int attackerAltitude = System.Math.Sign(this.GetPosition().z - this.waitingForBattle.GetPosition().z);
         // Compute damage for opponent
         int attackerDamage = attack;
         if (this.weapon.ExtraDamageForWeapon == this.waitingForBattle.weapon)
             attackerDamage = Mathf.RoundToInt(attackerDamage * this.weapon.ExtraDamageMultiplier);
         attackerDamage -= this.waitingForBattle.tempArmor;
+        attackerDamage = Mathf.RoundToInt(attackerDamage * this.weapon.DamageMultiplier);
+        if (attackerAltitude > 0) attackerDamage = Mathf.RoundToInt(attackerDamage * this.weapon.TerrainDamageMultiplier);
         // Compute self damage
         int defenderDamage = this.waitingForBattle.attack;
         if (this.waitingForBattle.weapon.ExtraDamageForWeapon == this.weapon)
             defenderDamage = Mathf.RoundToInt(defenderDamage * this.waitingForBattle.weapon.ExtraDamageMultiplier);
         defenderDamage = Mathf.RoundToInt(defenderDamage - tempArmor * 0.5f);
+        defenderDamage = Mathf.RoundToInt(defenderDamage * this.waitingForBattle.weapon.DamageMultiplier);
+        if (attackerAltitude < 0) defenderDamage = Mathf.RoundToInt(defenderDamage * this.waitingForBattle.weapon.TerrainDamageMultiplier);
         // Apply damage
-        this.waitingForBattle.health -= attack;
+        this.waitingForBattle.health -= attackerDamage;
         health -= defenderDamage;
         healthBar.HealthSize(((float)health/maxHealth));
         this.waitingForBattle.healthBar.HealthSize(((float)this.waitingForBattle.health/enemyMaxHealth));
